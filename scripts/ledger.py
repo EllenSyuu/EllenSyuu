@@ -18,7 +18,7 @@ from zoneinfo import ZoneInfo
 
 from sketch import (
     FAINT, GRAPHITE, INK, PAPER_LIGHT, RUST, SLATE,
-    f1, paper_finish, path, sketch_rect, svg_open, text, tick_path,
+    f1, paper_finish, path, sketch_rect, svg_open, text, text_width, tick_path,
 )
 
 USER = "EllenSyuu"
@@ -79,15 +79,14 @@ def build(counts: dict[dt.date, int], today: dt.date) -> str:
 
     # ---- left: the note
     lx = 70
-    out.append(path(f"M{lx},112 h38", "ink", 1))
-    out.append(text(lx + 52, 117, "CARNET · RECENT WORK", "caps", 14, SLATE))
-    out.append(text(lx - 2, 176, "The last five weeks", "ital", 44, INK))
-    note = ["A tick for every day something shipped —", "commits, pull requests, issues — across", "all my repositories. Redrawn each morning."]
-    for k, s in enumerate(note):
-        out.append(text(lx, 228 + k * 25, s, "ital", 19, SLATE))
-    out.append(text(lx, 332, f"{ticked} of {len(seen)} days ticked", "hand", 26, RUST))
-    out.append(text(lx, 360, f"{total} contributions", "ital", 18, GRAPHITE))
-    out.append(path(f"M{lx - 2},372 q90,-6 190,0", "pen", 1, stroke=RUST, extra='opacity=".7"'))
+    out.append(text(lx, 128, "01.", "ital", 26, "#a84a26"))
+    out.append(text(lx + text_width("01.", "serif-i", 26) + 14, 130, "Recent work", "title", 44, "#34425a"))
+    note = ["The last five weeks, one tick for every day", "something shipped — commits, pull requests,",
+            "issues — across all my repositories.", "Redrawn each morning."]
+    for k, s_ in enumerate(note):
+        out.append(text(lx, 184 + k * 25, s_, "sans", 15.5, SLATE))
+    out.append(text(lx, 316, f"{ticked} of {len(seen)} days", "title", 30, "#a84a26"))
+    out.append(text(lx, 344, f"{total} contributions", "hand", 16, GRAPHITE))
 
     # ---- right: the calendar page
     gx, gy, cw, chh = 586, 92, 88, 58

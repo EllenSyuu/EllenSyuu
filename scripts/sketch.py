@@ -28,21 +28,26 @@ MAPLE = "#cf602b"
 AMBER = "#e0a046"
 FROST = "#c9d4df"
 
+# The website's type, exactly: Cormorant Garamond for display (600 for titles, 500 for text and
+# small caps), Inter for running text, La Belle Aurore for hand-lettered notes.
 FACES = {
-    "serif": ("cormorant-500.woff2", "Cormorant Garamond", "normal"),
-    "serif-i": ("cormorant-500i.woff2", "Cormorant Garamond", "italic"),
-    "hand": ("belle-aurore.woff2", "La Belle Aurore", "normal"),
-    "sans": ("cormorant-500.woff2", "Cormorant Garamond", "normal"),
+    "serif": ("cormorant-500.woff2", "Cormorant Garamond", "normal", 500),
+    "serif-i": ("cormorant-500i.woff2", "Cormorant Garamond", "italic", 500),
+    "title": ("cormorant-600.woff2", "Cormorant Garamond", "normal", 600),
+    "hand": ("belle-aurore.woff2", "La Belle Aurore", "normal", 400),
+    "sans": ("inter-400.woff2", "Inter", "normal", 400),
+    "sans-m": ("inter-500.woff2", "Inter", "normal", 500),
 }
+ALL_FACES = tuple(FACES)
 
 
 def font_css(*keys: str) -> str:
     out = []
     for k in keys:
-        file, family, style = FACES[k]
+        file, family, style, weight = FACES[k]
         data = base64.b64encode((FONTS / file).read_bytes()).decode()
         out.append(
-            f"@font-face{{font-family:'{family}';font-style:{style};font-weight:500;"
+            f"@font-face{{font-family:'{family}';font-style:{style};font-weight:{weight};"
             f"src:url(data:font/woff2;base64,{data}) format('woff2');}}"
         )
     return "".join(out)
@@ -50,10 +55,12 @@ def font_css(*keys: str) -> str:
 
 BASE_CSS = f"""
 .serif{{font-family:'Cormorant Garamond',Garamond,'Times New Roman',serif;font-weight:500}}
+.title{{font-family:'Cormorant Garamond',Garamond,serif;font-weight:600}}
 .ital{{font-family:'Cormorant Garamond',Garamond,serif;font-style:italic;font-weight:500}}
-.hand{{font-family:'La Belle Aurore','Segoe Script',cursive}}
-.sans{{font-family:'Cormorant Garamond',Garamond,serif;font-weight:500}}
-.caps{{font-family:'Cormorant Garamond',Garamond,serif;font-weight:500;letter-spacing:.2em}}
+.hand{{font-family:'La Belle Aurore','Segoe Script',cursive;font-weight:400}}
+.sans{{font-family:Inter,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-weight:400}}
+.sans-m{{font-family:Inter,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-weight:500}}
+.caps{{font-family:'Cormorant Garamond',Garamond,serif;font-weight:600;letter-spacing:.22em}}
 .ink{{fill:none;stroke:{INK};stroke-linecap:round;stroke-linejoin:round}}
 .pen{{fill:none;stroke:{GRAPHITE};stroke-linecap:round;stroke-linejoin:round}}
 .draw{{stroke-dasharray:1;animation:draw 2.2s cubic-bezier(.55,.05,.25,1) both}}
@@ -84,7 +91,7 @@ PENCIL_DEFS = """
 """
 
 
-def svg_open(w: int, h: int, title: str, desc: str, fonts=("serif", "serif-i", "hand"), css="") -> str:
+def svg_open(w: int, h: int, title: str, desc: str, fonts=ALL_FACES, css="") -> str:
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" '
         f'role="img" aria-labelledby="t d">'

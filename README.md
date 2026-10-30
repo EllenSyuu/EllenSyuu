@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://ellensyuu.github.io">
-    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. I model rare, high-impact events — floods, financial tail risk, gaps in education data — and build the software that makes those models trustworthy. Drawing: a folio of ink-and-pencil engineering plates of Japan, each on a sheet with a paper clip and a pencil, that turn one after another — Fuji at dawn over Lake Ashi, a snowy evening below the Yasaka pagoda in Kyoto, Arashiyama in spring, and the Kamakura coast in summer.">
+    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. I model rare, high-impact events — floods, financial tail risk, gaps in education data — and build the software that makes those models trustworthy. Drawing: Planche 0, the Yasaka pagoda in Kyōto as an exploded isometric, pulled apart along its free-hanging core post, with a plan, a bracket-set detail and dimensions.">
   </a>
 </p>
 
@@ -37,4 +37,4 @@
   </sub>
 </p>
 
-<!-- Drawn by scripts/ (scenes.py + plates.py bake the cover plates, cover.py, works.py, ledger.py). The ledger is redrawn every morning by .github/workflows/ledger.yml. -->
+<!-- Drawn by scripts/ (cover.py, cards.py, ledger.py; shared kit in draft.py and sketch.py). The ledger is redrawn every morning by .github/workflows/ledger.yml. -->
