@@ -64,22 +64,21 @@ def left_column(o: list[str]) -> None:
         spans.append(f'<tspan x="{f1(x)}" class="{cls}" fill="{col}">{s.replace(" ", "&#160;")}</tspan>')
         x += text_width(s, key, size)
     o.append(f'<text y="298" font-size="{size}" class="serif fade" style="animation-delay:.1s">{"".join(spans)}</text>')
-    lines = [("I model ", "rare, high-impact events", " — floods,"),
-             ("financial tail risk, gaps in education data —", "", ""),
-             ("and build the software that makes those", "", ""),
-             ("models trustworthy.", "", "")]
+    lines = [("I model ", "rare, high-impact events", " — floods, financial"),
+             ("tail risk, gaps in education data — and build the", "", ""),
+             ("software that makes those models trustworthy.", "", "")]
     for k, (a, em, b) in enumerate(lines):
-        y = 356 + k * 29
+        y = 358 + k * 30
         if em:
             sp = [f'<tspan x="{lx}">{a.replace(" ", "&#160;")}</tspan>']
-            x = lx + text_width(a, "sans", 18)
+            x = lx + text_width(a, "sans", 21)
             sp.append(f'<tspan x="{f1(x)}" class="ital" font-size="21">{em}</tspan>')
-            x += text_width(em, "serif-i", 21)
+            x += text_width(em, "serif-i", 21) + 1
             sp.append(f'<tspan x="{f1(x)}">{b.replace(" ", "&#160;")}</tspan>')
-            o.append(f'<text y="{y}" class="sans fade" font-size="18" fill="{SLATE}" style="animation-delay:.5s">{"".join(sp)}</text>')
+            o.append(f'<text y="{y}" class="sans fade" font-size="21" fill="{SLATE}" style="animation-delay:.5s">{"".join(sp)}</text>')
         else:
-            o.append(text(lx, y, a, "sans fade", 18, SLATE, extra='style="animation-delay:.5s"'))
-    o.append(text(lx, 498, "UNESCO INSTITUTE FOR STATISTICS  ·  M.SC. MCGILL  ·  B.SC. HKU", "caps", 11.5, GRAPHITE))
+            o.append(text(lx, y, a, "sans fade", 21, SLATE, extra='style="animation-delay:.5s"'))
+    o.append(text(lx, 470, "UNESCO INSTITUTE FOR STATISTICS  ·  M.SC. MCGILL  ·  B.SC. HKU", "caps", 11.5, GRAPHITE))
 
 
 def build(only: int | None = None) -> str:

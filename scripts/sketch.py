@@ -16,9 +16,9 @@ from xml.sax.saxutils import escape
 
 FONTS = Path(__file__).parent / "fonts"
 
-PAPER = os.environ.get("PAPER", "#f4f4f1")  # museum white: neutral, a breath cool
-PAPER_LIGHT = "#fbfbf9"
-PAPER_DARK = "#e7e7e2"
+PAPER = os.environ.get("PAPER", "#fcfcfa")  # drawing-paper white
+PAPER_LIGHT = "#ffffff"
+PAPER_DARK = "#eeeeea"
 INK = "#22314a"
 SLATE = "#46526a"
 GRAPHITE = "#6f7b8c"
@@ -32,7 +32,7 @@ FACES = {
     "serif": ("cormorant-500.woff2", "Cormorant Garamond", "normal"),
     "serif-i": ("cormorant-500i.woff2", "Cormorant Garamond", "italic"),
     "hand": ("belle-aurore.woff2", "La Belle Aurore", "normal"),
-    "sans": ("inter-400.woff2", "Inter", "normal"),
+    "sans": ("cormorant-500.woff2", "Cormorant Garamond", "normal"),
 }
 
 
@@ -52,7 +52,7 @@ BASE_CSS = f"""
 .serif{{font-family:'Cormorant Garamond',Garamond,'Times New Roman',serif;font-weight:500}}
 .ital{{font-family:'Cormorant Garamond',Garamond,serif;font-style:italic;font-weight:500}}
 .hand{{font-family:'La Belle Aurore','Segoe Script',cursive}}
-.sans{{font-family:Inter,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}}
+.sans{{font-family:'Cormorant Garamond',Garamond,serif;font-weight:500}}
 .caps{{font-family:'Cormorant Garamond',Garamond,serif;font-weight:500;letter-spacing:.2em}}
 .ink{{fill:none;stroke:{INK};stroke-linecap:round;stroke-linejoin:round}}
 .pen{{fill:none;stroke:{GRAPHITE};stroke-linecap:round;stroke-linejoin:round}}
@@ -84,7 +84,7 @@ PENCIL_DEFS = """
 """
 
 
-def svg_open(w: int, h: int, title: str, desc: str, fonts=("serif", "serif-i", "hand", "sans"), css="") -> str:
+def svg_open(w: int, h: int, title: str, desc: str, fonts=("serif", "serif-i", "hand"), css="") -> str:
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" '
         f'role="img" aria-labelledby="t d">'
@@ -95,7 +95,7 @@ def svg_open(w: int, h: int, title: str, desc: str, fonts=("serif", "serif-i", "
 
 
 def paper_finish(w: int, h: int) -> str:
-    return f'<rect width="{w}" height="{h}" filter="url(#grain)" opacity=".9" pointer-events="none"/></svg>'
+    return f'<rect width="{w}" height="{h}" filter="url(#grain)" opacity=".45" pointer-events="none"/></svg>'
 
 
 # ---------------------------------------------------------------- text metrics

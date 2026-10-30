@@ -62,7 +62,8 @@ def fuji_dawn() -> str:
         y0 = next(y for xx, y in pts if xx == x)
         lower.append((x, y0 + 3 + (32 + fing) * (1 - u * u) ** 1.1))
     capd = smooth(cap) + " L" + smooth(lower)[1:] + " Z"
-    o.append(f'<path d="{capd}" fill="{PIG["snow"]}" filter="url(#wc4)"/>')
+    o.append(f'<path d="{capd}" fill="{PIG["snow"]}"/>')
+    o.append(contour(rng, lower[::2], .6, GRAPHITE, op=.6))
     o.append(wash(f"M{px + 6},{top + 4} L{px + 130},{top + 80} L{px + 40},{top + 110} Z", PIG["cerulean"], .25, f=4,
                   extra=f'clip-path="url(#h1c)"'))
     o.insert(0, f'<clipPath id="h1c"><path d="{capd}"/></clipPath>')
@@ -114,7 +115,7 @@ def fuji_dawn() -> str:
     o.append(contour(rng, [(-30, 500), (120, 494), (260, 498), (420, 506), (560, 500), (710, 502)], 1.1, op=.75))
     o.append(wash("M-30,520 Q160,530 300,560 L-30,600 Z", PIG["cerulean"], .16, f=3))
     # a stone lantern on the shore, capped with snow, and reeds
-    lx, ly = 150, 560
+    lx, ly = 596, 562
     lan = (f"M{lx - 16},{ly} h32 l-4,-8 h-24 Z M{lx - 5},{ly - 8} v-26 h10 v26 M{lx - 14},{ly - 34} h28 v-20 h-28 Z "
            f"M{lx - 26},{ly - 54} Q{lx},{ly - 74} {lx + 26},{ly - 54} Z M{lx},{ly - 68} v-8")
     o.append(wash(lan, PIG["slate"], .55, f=4))
@@ -124,8 +125,8 @@ def fuji_dawn() -> str:
     o.append(wash(f"M{lx - 30},{ly - 54} Q{lx},{ly - 82} {lx + 30},{ly - 54} Q{lx},{ly - 62} {lx - 30},{ly - 54} Z", PIG["snow"], 1, f=4))
     o.append(tone(rng, "h1l", lan, (lx - 30, ly - 80, lx + 30, ly), layers=((2.6, 70),), lmin=3, lmax=7, color=INK, ops=(.2, .35, .5), sw=.45))
     reeds = " ".join(f"M{f1(x)},{f1(y)} q{f1(rng.uniform(-4, 4))},{f1(-rng.uniform(10, 26) / 2)} {f1(rng.uniform(-6, 6))},{f1(-rng.uniform(10, 26))}"
-                     for x, y in [(rng.uniform(40, 420), rng.uniform(510, 590)) for _ in range(44)])
-    o.append(stroke(reeds, .7, INK, .55))
+                     for x, y in [(rng.uniform(200, 520), rng.uniform(512, 560)) for _ in range(16)])
+    o.append(stroke(reeds, .6, INK, .4))
     o.append(swatches(330, 30, [("Prussian blue", PIG["prussian"]), ("rose madder", PIG["rose"]), ("vermilion", PIG["vermilion"])]))
     o.append(f'<g>{_snow(rng, 34)}</g>')
     return "".join(o)
@@ -138,9 +139,9 @@ def kyoto_evening() -> str:
     o = []
     VX, VY = 340, 330
     # night sky: deep indigo, a paler glow around the pagoda
-    o.append(wash(f"M-40,-40 H{PW + 40} V380 H-40 Z", PIG["indigo"], .62, f=3))
-    o.append(wash(blob(rng, VX, 210, 190, 140, n=12), PIG["lavender"], .45, f=0))
-    o.append(wash(blob(rng, VX + 20, 250, 110, 70), PIG["rose"], .18, f=1))
+    o.append(wash(f"M-40,-40 H{PW + 40} V380 H-40 Z", PIG["lavender"], .42, f=3))
+    o.append(wash(blob(rng, VX, 210, 190, 140, n=12), PIG["indigo"], .22, f=0))
+    o.append(wash(blob(rng, VX + 20, 280, 220, 70), PIG["rose"], .4, f=1))
 
     def P(x, y, t):
         return (x + (VX - x) * t, y + (VY - y) * t)
@@ -150,7 +151,8 @@ def kyoto_evening() -> str:
     tiers = [(b0 - i * 40, 78 - i * 7.5) for i in range(5)]
     for i, (y, w) in enumerate(tiers):
         bw = w * .58
-        o.append(f'<path d="M{f1(cx - bw)},{f1(y - 12)} h{f1(2 * bw)} v-26 h{f1(-2 * bw)} Z" fill="{PIG["indigo"]}" fill-opacity=".85"/>')
+        o.append(wash(f"M{f1(cx - bw)},{f1(y - 12)} h{f1(2 * bw)} v-26 h{f1(-2 * bw)} Z", PIG["sienna"], .7))
+        o.append(stroke(f"M{f1(cx - bw)},{f1(y - 12)} h{f1(2 * bw)} v-26 h{f1(-2 * bw)} Z", .7, INK, .8))
         o.append(stroke(" ".join(f"M{f1(cx - bw + k * bw / 3)},{f1(y - 12)} v-26" for k in range(1, 6)), .5, PIG["amber"], .35))
         roof = (f"M{f1(cx - w - 14)},{f1(y - 22)} Q{f1(cx - w)},{f1(y - 10)} {f1(cx - w + 14)},{f1(y - 10)} L{f1(cx + w - 14)},{f1(y - 10)} "
                 f"Q{f1(cx + w)},{f1(y - 10)} {f1(cx + w + 14)},{f1(y - 22)} L{f1(cx + w * .7)},{f1(y - 30)} L{f1(cx - w * .7)},{f1(y - 30)} Z")
@@ -448,9 +450,75 @@ def kamakura_summer() -> str:
     return "".join(o)
 
 
+# ======================================================================= the drawing sheet
+
+NOTES = {
+    0: dict(marks=[(330, 100, "Fuji-san", 46, -40), (470, 384, "torii", 52, -34), (252, 466, "a boat, first light", 58, 46)],
+            dims=[("v", 44, 104, 352, "3 776 m")], labels=[(96, 440, "Ashi-no-ko")]),
+    1: dict(marks=[(344, 76, "Yasaka-no-tō", 50, -6), (340, 330, "v.p.", 26, 18), (150, 330, "machiya, lit from within", -60, -64)],
+            dims=[], labels=[]),
+    2: dict(marks=[(420, 168, "Arashiyama", 40, -40), (560, 352, "sakura", 46, -46)],
+            dims=[("h", 384, 24, 656, "Togetsu-kyō · 155 m")], labels=[(70, 520, "Katsura-gawa")]),
+    3: dict(marks=[(214, 200, "the Sea Candle", -30, -44), (520, 204, "Fuji-san, far off", -46, -46), (650, 262, "Inamuragasaki", -6, -84)],
+            dims=[], labels=[(70, 520, "Shichirigahama")]),
+}
+
+
+def sheet(k: int) -> str:
+    """The engineering-drawing furniture: frame, crop marks, ruler, scale bar, north, notes."""
+    rng = random.Random(500 + k)
+    o = []
+    x0, y0, x1, y1 = 26, 24, PW - 22, PH - 30
+    ruled = []
+    for pass_ in range(2):
+        j = (lambda: rng.uniform(-.8, .8)) if pass_ else (lambda: 0)
+        ruled.append(f"M{x0 - 3},{y0 + j()} L{x1 + 3},{y0 + j()} M{x1 + j()},{y0 - 3} L{x1 + j()},{y1 + 3} "
+                     f"M{x1 + 3},{y1 + j()} L{x0 - 3},{y1 + j()} M{x0 + j()},{y1 + 3} L{x0 + j()},{y0 - 3}")
+    o.append(stroke(ruled[0], .6, GRAPHITE, .5) + stroke(ruled[1], .35, GRAPHITE, .35))
+    crop = []
+    for cx, cy, sx, sy in ((x0, y0, -1, -1), (x1, y0, 1, -1), (x1, y1, 1, 1), (x0, y1, -1, 1)):
+        crop.append(f"M{cx + sx * 4},{cy} h{sx * 12} M{cx},{cy + sy * 4} v{sy * 12}")
+    o.append(stroke(" ".join(crop), .6, INK, .6))
+    ticks = []
+    for x in range(x0 + 20, x1, 20):
+        ticks.append(f"M{x},{y0} v{9 if (x - x0) % 100 == 0 else 4}")
+    for y in range(y0 + 20, y1, 20):
+        ticks.append(f"M{x1},{y} h-{9 if (y - y0) % 100 == 0 else 4}")
+    o.append(stroke(" ".join(ticks), .5, GRAPHITE, .55))
+    # scale bar and north arrow
+    sx, sy = x0 + 22, y1 - 20
+    for i in range(4):
+        if i % 2 == 0:
+            o.append(f'<path d="M{sx + i * 22},{sy - 3} h22 v6 h-22 Z" fill="{INK}" fill-opacity=".75"/>')
+    o.append(stroke(f"M{sx},{sy - 3} h88 v6 h-88 Z", .6, INK, .8))
+    o.append(f'<text x="{sx}" y="{sy - 8}" class="hand" font-size="11" fill="{GRAPHITE}">0</text>'
+             f'<text x="{sx + 88}" y="{sy - 8}" class="hand" font-size="11" fill="{GRAPHITE}" text-anchor="middle">1 km</text>')
+    nx, ny = sx + 120, sy
+    o.append(stroke(f"M{nx},{ny + 6} L{nx},{ny - 16} M{nx - 4},{ny - 10} L{nx},{ny - 16} L{nx + 4},{ny - 10}", .9, INK, .85))
+    o.append(f'<text x="{nx + 7}" y="{ny - 8}" class="hand" font-size="12" fill="{INK}">N</text>')
+    # leader notes, dimensions and place names
+    n = NOTES[k]
+    for (px, py, label, dx, dy) in n["marks"]:
+        tx, ty = px + dx, py + dy
+        o.append(stroke(f"M{px - 4},{py} h8 M{px},{py - 4} v8", .8, INK, .8))
+        o.append(stroke(f"M{px + (3 if dx > 0 else -3)},{py + (-3 if dy < 0 else 3)} Q{px + dx * .2},{ty} {tx - (4 if dx > 0 else -4)},{ty}", .55, GRAPHITE, .7))
+        o.append(f'<text x="{tx}" y="{ty + 4}" class="hand" font-size="15" fill="{INK}" text-anchor="{"start" if dx > 0 else "end"}">{label}</text>')
+    for kind, c, a, b, label in n["dims"]:
+        if kind == "v":
+            o.append(stroke(f"M{c},{a} V{b} M{c - 5},{a} h10 M{c - 5},{b} h10 M{c - 3},{a + 6} l3,-6 l3,6 M{c - 3},{b - 6} l3,6 l3,-6", .6, INK, .7))
+            o.append(f'<text x="{c + 8}" y="{(a + b) / 2}" class="hand" font-size="14" fill="{INK}">+ {label}</text>')
+        else:
+            o.append(stroke(f"M{a},{c} H{b} M{a},{c - 5} v10 M{b},{c - 5} v10 M{a + 6},{c - 3} l-6,3 l6,3 M{b - 6},{c - 3} l6,3 l-6,3", .6, INK, .7))
+            o.append(f'<rect x="{(a + b) / 2 - 70}" y="{c - 12}" width="140" height="16" fill="#fcfcfa"/>')
+            o.append(f'<text x="{(a + b) / 2}" y="{c + 1}" class="hand" font-size="14" fill="{INK}" text-anchor="middle">{label}</text>')
+    for (lx, ly, label) in n["labels"]:
+        o.append(f'<text x="{lx}" y="{ly}" class="hand" font-size="17" fill="{INK}">{label}</text>')
+    return "".join(o)
+
+
 SCENES = [
-    ("Hakone · 芦ノ湖, l'aube", "PLANCHE II", fuji_dawn),
-    ("Kyōto · 八坂, un soir de neige", "PLANCHE III", kyoto_evening),
-    ("Arashiyama · 渡月橋, printemps", "PLANCHE IV", arashiyama_spring),
-    ("Kamakura · 七里ヶ浜, été", "PLANCHE V", kamakura_summer),
+    ("Hakone, le lac Ashi à l'aube", "PLANCHE II", lambda: fuji_dawn() + sheet(0)),
+    ("Kyōto, Yasaka, un soir de neige", "PLANCHE III", lambda: kyoto_evening() + sheet(1)),
+    ("Arashiyama, le Togetsu-kyō au printemps", "PLANCHE IV", lambda: arashiyama_spring() + sheet(2)),
+    ("Kamakura, Shichirigahama en été", "PLANCHE V", lambda: kamakura_summer() + sheet(3)),
 ]

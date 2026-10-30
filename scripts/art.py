@@ -18,24 +18,24 @@ GRAPHITE = "#4a5363"
 
 # Pigments, named as on a palette. Each plate picks its own few.
 PIG = {
-    "prussian": "#2d4a6e",
-    "indigo": "#2b3557",
-    "cerulean": "#5b8fb9",
-    "rose": "#d98e95",
-    "madder": "#b84a5a",
-    "vermilion": "#cf4b32",
-    "sienna": "#a5623a",
-    "sepia": "#6b5240",
-    "sakura": "#eaa7b8",
-    "sap": "#7f9a6a",
-    "viridian": "#3f8a7f",
-    "teal": "#4c8e95",
-    "coral": "#e79a80",
-    "lavender": "#a7a3c8",
-    "slate": "#7d8aa3",
-    "amber": "#e3a54b",
-    "sand": "#d8c3a2",
-    "snow": "#fbfbf9",
+    "prussian": "#2f6db5",
+    "indigo": "#4a55a2",
+    "cerulean": "#4aa3df",
+    "rose": "#ef8fa3",
+    "madder": "#d9536f",
+    "vermilion": "#e8533a",
+    "sienna": "#c9773e",
+    "sepia": "#8a6a4f",
+    "sakura": "#f2a0b8",
+    "sap": "#7fb069",
+    "viridian": "#2aa189",
+    "teal": "#39a9b5",
+    "coral": "#f49b7a",
+    "lavender": "#9b98e0",
+    "slate": "#8a9bc0",
+    "amber": "#f2b33d",
+    "sand": "#e3c48f",
+    "snow": "#ffffff",
 }
 
 
@@ -57,7 +57,7 @@ def defs() -> str:
     return "".join(wc) + """
 <filter id="patchf" x="0" y="0" width="100%" height="100%">
   <feTurbulence type="fractalNoise" baseFrequency="0.009 0.016" numOctaves="3" seed="31" result="n"/>
-  <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  2.2 0 0 0 -0.4"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  2.0 0 0 0 -0.1"/>
 </filter>
 <linearGradient id="skyfade" x1="0" y1="0" x2="0" y2="260" gradientUnits="userSpaceOnUse">
   <stop offset="0" stop-color="#000"/><stop offset=".25" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>
@@ -114,25 +114,39 @@ PENCIL_AREA = 5200  # px²: larger than this, colour goes on as pencil, not as a
 
 
 def wash(d: str, color: str, op: float = 0.4, f: int = 0, extra: str = "") -> str:
-    """Colour on paper. Small shapes get real watercolour; large areas get coloured pencil.
+    """Colour, laid in with a coloured pencil only — no watercolour anywhere.
 
-    Restraint is the point: a big flat wash reads as fill, while pencil strokes over a
-    barely-there tint leave the paper breathing. Near-white shapes (snow, foam, clouds)
-    stay as paper reserved.
+    Large areas get sparse, shallow strokes that break into patches and leave paper showing;
+    small shapes (a torii, a lantern, a petal) get tight hatching, crossed when the colour
+    should read strong. Near-white shapes (snow, foam, clouds) are paper held back.
     """
+    if _light(color):
+        return f'<path d="{d}" fill="{color}" fill-opacity="{op:.2f}" {extra}/>'
     box = _bbox(d)
-    if _light(color) or box is None or (box[2] - box[0]) * (box[3] - box[1]) < PENCIL_AREA:
-        return f'<path d="{d}" fill="{color}" fill-opacity="{op:.2f}" filter="url(#wc{f})" {extra}/>'
+    if box is None:
+        return ""
     _ids[0] += 1
     cid = f"cp{_ids[0]}"
     rng = random.Random(zlib.crc32(d.encode()))
     x0, y0, x1, y1 = box
-    ang = 24 + rng.uniform(-7, 7)
-    k = min(1.0, op * 1.5)
-    strokes = hatch(rng, x0, y0, x1, y1, spacing=4.6 - 1.9 * k, angle=ang, lmin=8, lmax=26, gap=.4,
-                    ops=(.24 * k + .07, .4 * k + .09, .58 * k + .1), sw=.7, color=color, jitter=4)
-    return (f'<g {extra}><path d="{d}" fill="{color}" fill-opacity="{op * .28:.2f}" filter="url(#wc{f})"/>'
-            f'<clipPath id="{cid}"><path d="{d}"/></clipPath><g clip-path="url(#{cid})" mask="url(#patchy)">{strokes}</g></g>')
+    area = (x1 - x0) * (y1 - y0)
+    k = min(.95, op * 1.7)
+    if area > PENCIL_AREA:
+        ang = 26 + rng.uniform(-8, 8)
+        body = hatch(rng, x0, y0, x1, y1, spacing=4.6 - 2.2 * k, angle=ang, lmin=8, lmax=28, gap=.3,
+                     ops=(.28 * k + .1, .46 * k + .12, .64 * k + .14), sw=.8, color=color, jitter=4)
+        if k > .45:
+            body += hatch(rng, x0, y0, x1, y1, spacing=8 - 3 * k, angle=ang + 64, lmin=6, lmax=18, gap=.5,
+                          ops=(.1 * k + .05, .18 * k + .06, .26 * k + .07), sw=.6, color=color, jitter=5)
+        return (f'<g {extra}><clipPath id="{cid}"><path d="{d}"/></clipPath>'
+                f'<g clip-path="url(#{cid})" mask="url(#patchy)">{body}</g></g>')
+    ang = 40 + rng.uniform(-15, 15)
+    body = hatch(rng, x0 - 2, y0 - 2, x1 + 2, y1 + 2, spacing=1.9 - .7 * k, angle=ang, lmin=3, lmax=11, gap=.1,
+                 ops=(.4 * k + .22, .6 * k + .22, .78 * k + .2), sw=.8, color=color, jitter=6)
+    if k > .55:
+        body += hatch(rng, x0 - 2, y0 - 2, x1 + 2, y1 + 2, spacing=3.2 - k, angle=ang + 75, lmin=3, lmax=9, gap=.25,
+                      ops=(.25 * k + .1, .4 * k + .1, .55 * k + .1), sw=.55, color=color, jitter=6)
+    return f'<g {extra}><clipPath id="{cid}"><path d="{d}"/></clipPath><g clip-path="url(#{cid})">{body}</g></g>'
 
 
 def blob(rng, cx, cy, rx, ry, n=10, wob=0.22) -> str:
@@ -193,9 +207,10 @@ def contour(rng, pts, sw=1.3, color=INK, closed=False, ghost=True, op=0.9) -> st
     """A line drawn with a soft pencil: a firm pass and a lighter, slightly offset second pass."""
     d = smooth(pts, closed=closed)
     out = f'<path d="{d}" fill="none" stroke="{color}" stroke-width="{sw}" stroke-linecap="round" stroke-linejoin="round" opacity="{op}"/>'
-    if ghost:
-        off = [(x + rng.uniform(-1.4, 1.4), y + rng.uniform(-1.4, 1.4)) for x, y in pts]
-        out += f'<path d="{smooth(off, closed=closed)}" fill="none" stroke="{color}" stroke-width="{sw * .45:.2f}" stroke-linecap="round" opacity="{op * .45:.2f}"/>'
+    if ghost:  # the line traced over again, twice, never quite on top of itself
+        for amp, w, a in ((1.3, .45, .45), (2.2, .3, .28)):
+            off = [(x + rng.uniform(-amp, amp), y + rng.uniform(-amp, amp)) for x, y in pts]
+            out += f'<path d="{smooth(off, closed=closed)}" fill="none" stroke="{color}" stroke-width="{sw * w:.2f}" stroke-linecap="round" opacity="{op * a:.2f}"/>'
     return out
 
 

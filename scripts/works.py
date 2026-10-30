@@ -230,10 +230,7 @@ def card(k: int, w: dict) -> str:
     lx = 44
     o.append(text(lx, 58, f"PLANCHE {ROMAN[k]}", "caps", 11, RUST))
     o.append(text(lx + text_width(f"PLANCHE {ROMAN[k]}", "serif", 11, .2) + 12, 58, "· " + w["over"], "caps", 11, GRAPHITE))
-    if re.search(r"[A-Z]{3}", w["title"]):  # capitals read badly in the script hand
-        tkey, tcls, tsize = "serif-i", "ital", 50
-    else:
-        tkey, tcls, tsize = "hand", "hand", 46
+    tkey, tcls, tsize = "serif", "serif", 44
     while text_width(w["title"], tkey, tsize) > 296 and tsize > 26:
         tsize -= 1
     o.append(text(lx - 2, 114, w["title"], tcls, tsize, INK))
@@ -243,8 +240,8 @@ def card(k: int, w: dict) -> str:
 
     o.append(path(f"M{lx},284 h40", "pen", .8))
     o.append(text(lx, 314, w["value"], "serif", 27, RUST))
-    for j, line in enumerate(wrap(w["label"], "sans", 12, 290)[:2]):
-        o.append(text(lx, 334 + j * 16, line, "sans", 12, SLATE))
+    for j, line in enumerate(wrap(w["label"], "serif-i", 15, 290)[:2]):
+        o.append(text(lx, 334 + j * 17, line, "ital", 15, SLATE))
     o.append(text(lx, 374, w["tech"], "caps", 9.5, GRAPHITE))
 
     # vignette
@@ -269,8 +266,8 @@ def heading(title: str, over: str, note: str, dest: Path) -> None:
     o = [svg_open(hw, hh, title, f"{over} — {note}", fonts=("serif", "serif-i", "hand"))]
     o.append(path(f"M70,52 h38", "ink", 1))
     o.append(text(122, 57, over, "caps", 14, SLATE))
-    o.append(text(68, 108, title, "hand", 44, INK))
-    tw = text_width(title, "hand", 44)
+    o.append(text(68, 108, title, "ital", 46, INK))
+    tw = text_width(title, "serif-i", 46)
     o.append(path(f"M{f1(84 + tw)},92 " + " ".join(f"L{f1(x)},{f1(92 + rng.uniform(-.8, .8))}" for x in range(int(110 + tw), 1210, 40)), "pen", .8, extra='opacity=".6"'))
     o.append(text(1210, 68, note, "ital", 17, GRAPHITE, "end"))
     o.append(paper_finish(hw, hh))
@@ -278,7 +275,7 @@ def heading(title: str, over: str, note: str, dest: Path) -> None:
 
 
 def main() -> None:
-    heading("selected work", "PLANCHES III – X", "each card opens the repository, the live site or the case study",
+    heading("Selected work", "PLANCHES III – X", "each card opens the repository, the live site or the case study",
             Path("assets/heading-work.svg"))
     out = Path("assets/works")
     out.mkdir(parents=True, exist_ok=True)

@@ -73,7 +73,7 @@ def build(counts: dict[dt.date, int], today: dt.date) -> str:
         W, H, "Recent work — the last five weeks",
         f"A hand-drawn calendar of the five weeks up to {today:%d %B %Y}: "
         f"{ticked} of {len(seen)} days ticked, {total} contributions.",
-        fonts=("serif", "serif-i", "hand", "sans"),
+        fonts=("serif", "serif-i", "hand"),
         css=".tick{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .5s ease-out forwards}",
     )]
 
@@ -81,7 +81,7 @@ def build(counts: dict[dt.date, int], today: dt.date) -> str:
     lx = 70
     out.append(path(f"M{lx},112 h38", "ink", 1))
     out.append(text(lx + 52, 117, "CARNET · RECENT WORK", "caps", 14, SLATE))
-    out.append(text(lx - 2, 178, "the last five weeks", "hand", 42, INK))
+    out.append(text(lx - 2, 176, "The last five weeks", "ital", 44, INK))
     note = ["A tick for every day something shipped —", "commits, pull requests, issues — across", "all my repositories. Redrawn each morning."]
     for k, s in enumerate(note):
         out.append(text(lx, 228 + k * 25, s, "ital", 19, SLATE))
