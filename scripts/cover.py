@@ -1,4 +1,4 @@
-"""Planche II — Mont-Tremblant in winter, seen from the river: the profile's cover plate.
+"""Planche II — Fuji in winter across Lake Ashi, Hakone: the profile's cover plate.
 
 Same hand as Planche I on ellensyuu.github.io (Montréal, from the river): ink ridges drawn in,
 graphite hatching on the shadow side, hand-lettered names, a statistical inset in the sky.
@@ -28,6 +28,8 @@ CSS = f"""
 @keyframes shim{{to{{stroke-dashoffset:-180}}}}
 .gull{{animation:gull 26s linear infinite;animation-delay:6s;opacity:0}}
 @keyframes gull{{0%{{transform:translate(0,0);opacity:0}}3%{{opacity:1}}38%{{opacity:1}}42%,100%{{transform:translate(-620px,-70px);opacity:0}}}}
+.sway{{animation:sway 4s ease-in-out infinite alternate}}
+@keyframes sway{{from{{transform:rotate(-4deg)}}to{{transform:rotate(4deg)}}}}
 .flap{{animation:flap .55s ease-in-out infinite alternate;transform-origin:center;transform-box:fill-box}}
 @keyframes flap{{to{{transform:scaleY(.45)}}}}
 """
@@ -60,7 +62,7 @@ def build() -> str:
     out = [svg_open(
         W, H,
         "Ziyi (Ellen) Zhou — statistician and data engineer, Montréal",
-        "Hand-drawn plate: Mont-Tremblant in winter seen across a river, with a lit café on the near bank, "
+        "Hand-drawn plate: Mount Fuji in winter seen across Lake Ashi in Hakone, with the torii standing in the water and a lit kissaten on the shore, "
         "falling snow and a small return-level curve sketched in the sky. On the left: Ziyi (Ellen) Zhou, "
         "statistician and data engineer in Montréal, modelling rare, high-impact events.",
         css=CSS,
@@ -84,177 +86,183 @@ def build() -> str:
 
     plate = ['<g mask="url(#plate)"><g filter="url(#pencil)">']
 
-    # ---- far range: lighter, flatter, drawn first
-    base = 432
-    far = ridge(rng, PX0 - 30, W + 10, base, [(930, 250, 190), (1112, 214, 200), (1262, 236, 150)], rough=0.9)
-    far_d = smooth(far)
-    plate.append(f'<path d="{far_d} L{W + 10},{base} L{PX0 - 30},{base} Z" fill="{PAPER_DARK}" opacity=".7"/>')
-    plate.append(path(far_d, "pen", 0.9, draw=True, delay=0.2, dur=2.6, extra='opacity=".7"'))
+    # ---- Fuji: one cone, concave flanks, a flat crater rim
+    px, top, base, half = 1046, 150, 404, 330
+    fuji = []
+    x = PX0 - 30
+    while x <= W + 10:
+        d = abs(x - px)
+        if d < 20:
+            y = top + rng.uniform(-1.2, 1.6) + (2.5 if 4 < d < 10 else 0)
+        else:
+            t = min(1.0, (d - 20) / (half - 20))
+            y = top + (base - top) * (1 - (1 - t) ** 2.3) + rng.uniform(-.8, .8)
+        fuji.append((x, y))
+        x += 5
+    fuji_d = smooth(fuji)
+    plate.append(f'<clipPath id="mtn"><path d="{fuji_d} L{W + 10},{base} L{PX0 - 30},{base} Z"/></clipPath>')
+    plate.append(f'<path d="{fuji_d} L{W + 10},{base} L{PX0 - 30},{base} Z" fill="#e8dfcd"/>')
+    plate.append(f'<g clip-path="url(#mtn)" class="fade" style="animation-delay:1.4s">'
+                 + path(hatch_lines(PX0, top, W, base, 6.5, 100), "pen", .45, extra='opacity=".28"') + "</g>")
+    # the shadowed east flank
+    plate.append(f'<clipPath id="sh0"><path d="M{px + 6},{top} L{px + 150},{base} L{W + 10},{base} L{W + 10},{top} Z"/></clipPath>')
+    plate.append(f'<g clip-path="url(#mtn)"><g clip-path="url(#sh0)" class="fade" style="animation-delay:1.6s">'
+                 + path(hatch_lines(px - 20, top - 10, W + 10, base, 5.2, 64), "pen", .55, extra='opacity=".45"') + "</g></g>")
+    # gullies running down from the rim
+    gul = []
+    for off in (-150, -96, -52, -18, 22, 60, 110, 170):
+        x0 = px + off * .12
+        y0 = ridge_y(fuji, x0) + 6
+        pts = [(x0 + off * j / 5 + rng.uniform(-2, 2), y0 + (base - y0) * j / 5 * (0.75 + .2 * rng.random())) for j in range(6)]
+        gul.append(smooth(pts))
+    plate.append(f'<g clip-path="url(#mtn)">{path(" ".join(gul), "pen", .6, extra=chr(111) + "pacity=" + chr(34) + ".5" + chr(34))}</g>')
+    # the snow cap, ending in long fingers down the gullies
+    cap = [(x, y) for x, y in fuji if abs(x - px) < 128]
+    lower = []
+    for x, _ in cap[::-1][::2]:
+        u = (x - px) / 128
+        finger = abs(math.sin((x - px) / 11.0)) ** 4 * 42 * (1 - abs(u))
+        lower.append((x, ridge_y(fuji, x) + 3 + (30 + finger) * (1 - u * u) ** 1.1))
+    capd = smooth(cap) + " L" + smooth(lower)[1:] + " Z"
+    plate.append(f'<path d="{capd}" fill="{PAPER_LIGHT}" stroke="{GRAPHITE}" stroke-width=".7" class="fade" style="animation-delay:1.1s"/>')
+    plate.append(path(fuji_d, "ink", 1.6, draw=True, delay=0.4, dur=3.0))
 
-    # ---- main range
-    peaks = [(1012, 176, 270), (1196, 246, 170), (868, 300, 160)]
-    main = ridge(rng, PX0 - 30, W + 10, base, peaks, rough=1.1)
-    main_d = smooth(main)
-    plate.append(f'<clipPath id="mtn"><path d="{main_d} L{W + 10},{base} L{PX0 - 30},{base} Z"/></clipPath>')
-    plate.append(f'<path d="{main_d} L{W + 10},{base} L{PX0 - 30},{base} Z" fill="{PAPER}"/>')
+    my = ridge_y(fuji, px)
+    plate.append(path(f"M{px},{my - 30} L{px},{my - 8} M{px - 7},{my - 22} L{px + 7},{my - 22}", "ink", 1.1, draw=True, delay=2.6, dur=.6))
+    plate.append(text(px + 12, my - 22, "Fuji-san", "hand fade", 22, INK, extra='style="animation-delay:2.8s"'))
+    plate.append(text(px + 104, my - 22, "富士山", "serif fade", 13, GRAPHITE, extra='style="animation-delay:2.9s"'))
 
-    # shadow flanks: hatch everything right of a steep line dropped from each summit
-    for i, (px, py, w) in enumerate(peaks):
-        foot = px + 0.2 * (base - py)
-        right = [(x, y) for x, y in main if px <= x <= px + w]
-        poly = [(px, ridge_y(main, px))] + right + [(right[-1][0], base), (foot, base)]
-        pd = "M" + " L".join(f"{f1(x)},{f1(y)}" for x, y in poly) + " Z"
-        plate.append(f'<clipPath id="sh{i}"><path d="{pd}"/></clipPath>')
-        plate.append(
-            f'<g clip-path="url(#mtn)"><g clip-path="url(#sh{i})" class="fade" style="animation-delay:{1.6 + .3 * i:.1f}s">'
-            + path(hatch_lines(px - 20, py - 10, px + w, base, 5.4, 62), "pen", 0.55, extra='opacity=".45"')
-            + "</g></g>"
-        )
+    # ---- the Hakone hills in front, darker and nearer
+    hills = []
+    x = PX0 - 30
+    while x <= W + 10:
+        y = 412 - 60 * math.exp(-((x - 800) / 80) ** 2) - 26 * math.exp(-((x - 920) / 50) ** 2) \
+            - 44 * math.exp(-((x - 1260) / 70) ** 2) + 5 * math.sin(x / 23) + rng.uniform(-.8, .8)
+        hills.append((x, y))
+        x += 6
+    hb = 456
+    hd = smooth(hills)
+    plate.append(f'<clipPath id="hill"><path d="{hd} L{W + 10},{hb} L{PX0 - 30},{hb} Z"/></clipPath>')
+    plate.append(f'<path d="{hd} L{W + 10},{hb} L{PX0 - 30},{hb} Z" fill="{PAPER_DARK}"/>')
+    plate.append(f'<g clip-path="url(#hill)" class="fade" style="animation-delay:1.9s">'
+                 + path(hatch_lines(PX0 - 30, 330, W + 10, hb, 4.2, 118), "pen", .5, extra='opacity=".4"')
+                 + path(hatch_lines(PX0 - 30, 330, W + 10, hb, 7, 40), "pen", .45, extra='opacity=".25"') + "</g>")
+    # cedar tufts along the crest
+    tufts = []
+    for x, y in hills[::2]:
+        if rng.random() < .8:
+            h = rng.uniform(3.5, 7)
+            tufts.append(f"M{f1(x - h * .5)},{f1(y + 2)} Q{f1(x)},{f1(y - h * 1.6)} {f1(x + h * .5)},{f1(y + 2)}")
+    plate.append(path(" ".join(tufts), "ink", .7, extra='opacity=".85"'))
+    plate.append(path(hd, "ink", 1.2, draw=True, delay=1.0, dur=2.4))
+    # elevation dimension
+    plate.append(path(f"M{PX0 + 10},{my} L{PX0 + 10},{base - 40} M{PX0 + 4},{my} L{PX0 + 16},{my}", "pen", .8, extra='stroke-dasharray="3 3"'))
+    plate.append(path(f"M{PX0 + 16},{my} L{px - 14},{my}", "pen", .5, extra='stroke-dasharray="2 4" opacity=".7"'))
+    plate.append(text(PX0 + 20, my + 40, "+ 3 776 m", "hand fade", 17, SLATE, extra='style="animation-delay:3s"'))
 
-    # snow caps: the ridge near each summit, closed by a ragged snowline
-    for i, (px, py, w) in enumerate(peaks):
-        depth = 44 if i == 0 else 30
-        cap = [(x, y) for x, y in main if y < py + depth and abs(x - px) < w * 0.5]
-        if len(cap) < 3:
-            continue
-        lower = []
-        xs = [x for x, _ in cap]
-        x = xs[-1]
-        while x >= xs[0]:
-            lower.append((x, ridge_y(main, x) + rng.uniform(10, 26) * (1 - (abs(x - px) / (w * 0.5)) ** 2) + 3))
-            x -= rng.uniform(6, 13)
-        lower.append((xs[0], cap[0][1]))
-        d = smooth(cap) + " L" + smooth(lower)[1:] + " Z"
-        plate.append(f'<path d="{d}" fill="{PAPER_LIGHT}" stroke="{GRAPHITE}" stroke-width=".7" class="fade" '
-                     f'style="animation-delay:{1.1 + .2 * i:.1f}s" filter="url(#pencil)"/>')
-
-    plate.append(path(main_d, "ink", 1.5, draw=True, delay=0.5, dur=2.8))
-
-    # Tremblant's ski runs, pale ribbons down the sunlit face
-    runs = []
-    for k, off in enumerate((-70, -46, -24, -100)):
-        x0 = peaks[0][0] + off * .35
-        y0 = ridge_y(main, x0) + 10
-        pts = [(x0, y0)]
-        for j in range(1, 7):
-            y = y0 + (base - y0) * j / 6
-            pts.append((x0 + off * j / 6 + rng.uniform(-4, 4), y))
-        runs.append(smooth(pts))
-    plate.append(f'<g class="fade" style="animation-delay:2.4s">'
-                 + path(" ".join(runs), "pen", 5.5, stroke=PAPER_LIGHT, extra='opacity=".95"')
-                 + path(" ".join(runs), "pen", .5, extra='stroke-dasharray="2 5" opacity=".7"') + "</g>")
-
-    # summit marker, like Planche I's "+ Mont Royal"
-    mx, my = peaks[0][0], ridge_y(main, peaks[0][0])
-    plate.append(path(f"M{mx},{my - 30} L{mx},{my - 8} M{mx - 7},{my - 22} L{mx + 7},{my - 22}", "ink", 1.1, draw=True, delay=2.6, dur=.6))
-    plate.append(text(mx + 12, my - 22, "Mont Tremblant", "hand fade", 21, INK, extra='style="animation-delay:2.8s"'))
-    # elevation dimension on the left flank
-    plate.append(path(f"M{PX0 + 10},{my} L{PX0 + 10},{base} M{PX0 + 4},{my} L{PX0 + 16},{my} M{PX0 + 4},{base} L{PX0 + 16},{base}",
-                      "pen", .8, extra='stroke-dasharray="3 3"'))
-    plate.append(path(f"M{PX0 + 16},{my} L{mx - 14},{my}", "pen", .5, extra='stroke-dasharray="2 4" opacity=".7"'))
-    plate.append(text(PX0 + 20, (my + base) / 2 - 10, "+ 875 m", "hand fade", 17, SLATE, extra='style="animation-delay:3s"'))
-
-    # ---- treeline along the foot of the range
-    trees = []
-    x = PX0 - 20
-    while x < W:
-        if rng.random() < 0.12:
-            x += rng.uniform(14, 34)  # a clearing
-            continue
-        for _ in range(rng.choice([1, 2, 2, 3])):
-            trees.append((x + rng.uniform(-3, 3), base + rng.uniform(5, 15), rng.uniform(11, 27)))
-        x += rng.uniform(9, 18)
-    trees.sort(key=lambda t: t[1])
-    plate.append(f'<path d="M{PX0 - 30},{base} L{W + 10},{base} L{W + 10},{base + 18} L{PX0 - 30},{base + 18} Z" fill="{PAPER}"/>')
-    tl = []
-    for x, yb, h in trees:
-        w2 = h * rng.uniform(.22, .3)
-        d = (f"M{f1(x)},{f1(yb - h)} L{f1(x - w2 * .7)},{f1(yb - h * .45)} L{f1(x - w2 * .35)},{f1(yb - h * .48)} "
-             f"L{f1(x - w2)},{f1(yb)} L{f1(x + w2)},{f1(yb)} L{f1(x + w2 * .35)},{f1(yb - h * .48)} L{f1(x + w2 * .7)},{f1(yb - h * .45)} Z")
-        tl.append(f'<path d="{d}" fill="{PAPER}" stroke="{INK}" stroke-width=".75" stroke-linejoin="round"/>')
-    plate.append(f'<g class="fade" style="animation-delay:2.1s">{"".join(tl)}</g>')
-
-    # ---- river
-    r0, r1 = 452, 512
-    bank = [(x, r0 + rng.uniform(-1.5, 1.5)) for x in range(PX0 - 30, W + 12, 24)]
+    # ---- Lake Ashi, with the upside-down Fuji in it
+    r0, r1 = 456, 520
     plate.append(f'<path d="M{PX0 - 30},{r0} L{W + 10},{r0} L{W + 10},{r1} L{PX0 - 30},{r1} Z" fill="{PAPER_LIGHT}"/>')
-    plate.append(path(smooth(bank), "ink", 1.0, draw=True, delay=1.0, dur=2.0))
-    # reflection: the main ridge, flipped and broken
-    refl = [(x, r0 + (base - y) * 0.22 + 2) for x, y in main[::2]]
-    plate.append(path(smooth(refl), "pen", .7, extra='stroke-dasharray="10 7" opacity=".6"'))
+    plate.append(path(smooth([(x, r0 + rng.uniform(-1.2, 1.2)) for x in range(PX0 - 30, W + 12, 24)]), "ink", 1.0, draw=True, delay=1.0, dur=2.0))
+    refl = [(x, r0 + 2 + (base - y) * 0.2) for x, y in fuji[::3] if abs(x - px) < half]
+    plate.append(path(smooth(refl), "pen", .8, extra='stroke-dasharray="9 6" opacity=".55"'))
     ripples = []
     for _ in range(70):
         y = rng.uniform(r0 + 6, r1 - 4)
         x = rng.uniform(PX0 - 10, W)
         L = rng.uniform(12, 46) * (0.6 + (y - r0) / (r1 - r0))
         ripples.append(f"M{f1(x)},{f1(y)} L{f1(x + L)},{f1(y + rng.uniform(-.6, .6))}")
-    plate.append(path(" ".join(ripples), "pen shimmer", .7, extra='opacity=".75"'))
-    plate.append(text(1044, 494, "Rivière du Diable", "hand fade", 19, INK, extra='style="animation-delay:3.2s"'))
+    plate.append(path(" ".join(ripples), "pen shimmer", .7, extra='opacity=".7"'))
+    plate.append(text(1000, 500, "Ashi-no-ko", "hand fade", 19, INK, extra='style="animation-delay:3.2s"'))
 
-    # ---- near bank: snow field
+    # the Heiwa torii, standing in the water
+    tx, tb, th = 1186, 506, 66
+    pil = f"M{tx - 22},{tb} L{tx - 19},{tb - th} M{tx + 22},{tb} L{tx + 19},{tb - th}"
+    kasagi = (f"M{tx - 40},{tb - th - 4} Q{tx},{tb - th - 1} {tx + 40},{tb - th - 4} "
+              f"L{tx + 36},{tb - th - 10} Q{tx},{tb - th - 7} {tx - 36},{tb - th - 10} Z")
+    nuki = f"M{tx - 30},{tb - th + 12} h60 M{tx},{tb - th - 3} v15"
+    plate.append(f'<path d="{kasagi}" fill="{RUST}" fill-opacity=".75" stroke="{RUST}" stroke-width="1"/>')
+    plate.append(path(pil, "ink", 4.2, stroke=RUST, extra='opacity=".8"'))
+    plate.append(path(nuki, "ink", 2.4, stroke=RUST, extra='opacity=".85"'))
+    plate.append(path(f"M{tx - 20},{tb + 3} L{tx - 18},{tb + 30} M{tx + 20},{tb + 3} L{tx + 18},{tb + 30} M{tx - 34},{tb + 32} h68",
+                      "pen", 1.6, stroke=RUST, extra='stroke-dasharray="4 4" opacity=".4"'))
+    plate.append(path(f"M{tx - 34},{tb} q8,-3 16,0 M{tx + 12},{tb} q8,-3 16,0", "pen", .8))
+
+    # ---- the near shore, under snow
     near = [(x, r1 + rng.uniform(-1.8, 1.8)) for x in range(PX0 - 30, W + 12, 20)]
     plate.append(f'<path d="{smooth(near)} L{W + 10},{H} L{PX0 - 30},{H} Z" fill="{PAPER}"/>')
     plate.append(path(smooth(near), "ink", 1.1, draw=True, delay=1.2, dur=2))
-    tufts = []
-    for _ in range(46):
-        x, y = rng.uniform(PX0, W - 10), rng.uniform(r1 + 18, H - 30)
-        tufts.append(f"M{f1(x)},{f1(y)} l{f1(rng.uniform(-2, 2))},{f1(-rng.uniform(5, 11))}")
-    plate.append(path(" ".join(tufts), "pen", .6, extra='opacity=".6"'))
+    grass = []
+    for _ in range(40):
+        gx, gy = rng.uniform(PX0, W - 10), rng.uniform(r1 + 18, H - 30)
+        grass.append(f"M{f1(gx)},{f1(gy)} l{f1(rng.uniform(-2, 2))},{f1(-rng.uniform(5, 11))}")
+    plate.append(path(" ".join(grass), "pen", .6, extra='opacity=".6"'))
 
-    # ---- the café on the near bank, with its little quay
-    cx, cy = 820, 548  # front-left foot of the building
-    cw, ch = 112, 50
-    roof_peak = (cx + cw / 2, cy - ch - 44)
-    house = (
-        f"M{cx},{cy} L{cx},{cy - ch} L{cx + cw},{cy - ch} L{cx + cw},{cy} "
-        f"M{cx - 10},{cy - ch + 2} L{roof_peak[0]},{roof_peak[1]} L{cx + cw + 10},{cy - ch + 2} "
-        f"M{cx + 78},{cy - ch - 26} L{cx + 78},{cy - ch - 50} L{cx + 92},{cy - ch - 50} L{cx + 92},{cy - ch - 14}"
-    )
-    plate.append(f'<path d="M{cx},{cy} L{cx},{cy - ch} L{cx - 10},{cy - ch + 2} L{roof_peak[0]},{roof_peak[1]} '
-                 f'L{cx + cw + 10},{cy - ch + 2} L{cx + cw},{cy - ch} L{cx + cw},{cy} Z" fill="{PAPER}"/>')
-    # snow on the roof
-    plate.append(f'<path d="M{cx - 13},{cy - ch + 1} L{roof_peak[0]},{roof_peak[1] - 4} L{cx + cw + 13},{cy - ch + 1} '
-                 f'Q{cx + cw - 10},{cy - ch - 6} {cx + cw - 30},{cy - ch - 14} Q{roof_peak[0]},{roof_peak[1] + 12} {cx + 22},{cy - ch - 10} Z" '
-                 f'fill="{PAPER_LIGHT}" stroke="{GRAPHITE}" stroke-width=".7"/>')
-    # the lit window, an amber wash with a warm halo
-    wx, wy, ww, wh = cx + 14, cy - ch + 12, 40, 24
-    plate.append(f'<ellipse cx="{wx + ww / 2}" cy="{wy + wh / 2}" rx="34" ry="22" fill="{AMBER}" fill-opacity=".2" filter="url(#wash)" class="glow"/>')
-    plate.append(f'<rect x="{wx}" y="{wy}" width="{ww}" height="{wh}" fill="{AMBER}" fill-opacity=".55" class="glow"/>')
-    win = f"M{wx},{wy} h{ww} v{wh} h-{ww} Z M{wx + ww / 2},{wy} v{wh} M{wx},{wy + wh / 2} h{ww}"
-    door = f"M{cx + 72},{cy} v-32 h20 v32"
-    siding = " ".join(f"M{cx + 2},{cy - ch + k} L{cx + cw - 2},{cy - ch + k}" for k in range(8, ch, 7) if not (wy - (cy - ch) - 2 < k < wy - (cy - ch) + wh + 2))
-    plate.append(path(siding, "pen", .5, extra='opacity=".6"'))
-    plate.append(path(house + " " + win + " " + door, "ink", 1.2, draw=True, delay=1.8, dur=2.2))
-    plate.append(f'<circle cx="{cx + 88}" cy="{cy - 15}" r="1.6" fill="{INK}"/>')
-    # hanging sign
-    plate.append(path(f"M{cx + cw},{cy - ch + 8} h22 M{cx + cw + 8},{cy - ch + 8} v6 M{cx + cw + 20},{cy - ch + 8} v6", "ink", .9))
-    plate.append(f'<rect x="{cx + cw + 3}" y="{cy - ch + 14}" width="24" height="13" fill="{PAPER_LIGHT}" stroke="{INK}" stroke-width=".9"/>')
-    plate.append(text(cx + cw + 15, cy - ch + 24, "café", "hand", 9.5, RUST, "middle"))
-    # steam from the chimney
-    for k in range(3):
-        sx = cx + 85 + k * 3
-        plate.append(path(f"M{sx},{cy - ch - 54} q-6,-8 0,-14 q6,-7 0,-14", "pen steam", .9,
-                          extra=f'style="animation-delay:{k * 2:.0f}s"'))
-    # the quay, on short piles into the river
-    q = f"M{cx + cw + 30},{r1 - 2} L{cx + cw + 150},{r1 - 9} L{cx + cw + 150},{r1 - 4} L{cx + cw + 30},{r1 + 3} Z"
-    piles = " ".join(f"M{f1(cx + cw + 40 + k * 26)},{f1(r1 - 2 - k * 1.5)} v12" for k in range(5))
-    plate.append(path(q + " " + piles, "ink", 1.0, draw=True, delay=2.3, dur=1.4))
-    plate.append(text(cx + cw + 30, r1 + 30, "Café du Quai", "hand fade", 19, INK, extra='style="animation-delay:3.4s"'))
+    # ---- a kissaten on the shore: tiled roof, noren, a red lantern
+    cx, cy, cw, ch = 806, 552, 118, 46
+    eave = cy - ch
+    roof = (f"M{cx - 20},{eave + 4} Q{cx - 8},{eave - 2} {cx + 6},{eave - 4} L{cx + 24},{eave - 30} "
+            f"L{cx + cw - 24},{eave - 30} L{cx + cw - 6},{eave - 4} Q{cx + cw + 8},{eave - 2} {cx + cw + 20},{eave + 4} Z")
+    plate.append(f'<path d="M{cx},{cy} V{eave} H{cx + cw} V{cy} Z" fill="{PAPER}"/>')
+    plate.append(f'<path d="{roof}" fill="{PAPER}"/>')
+    tiles = " ".join(f"M{f1(cx + 10 + k * 9)},{eave - 3} L{f1(cx + 26 + k * 7.1)},{eave - 28}" for k in range(12))
+    plate.append(f'<clipPath id="rf"><path d="{roof}"/></clipPath><g clip-path="url(#rf)">{path(tiles, "pen", .6, extra=chr(111) + "pacity=" + chr(34) + ".7" + chr(34))}</g>')
+    # snow along the ridge and eaves
+    plate.append(f'<path d="M{cx + 20},{eave - 29} Q{cx + cw / 2},{eave - 40} {cx + cw - 20},{eave - 29} '
+                 f'Q{cx + cw / 2},{eave - 24} {cx + 20},{eave - 29} Z" fill="{PAPER_LIGHT}" stroke="{GRAPHITE}" stroke-width=".7"/>')
+    plate.append(path(f"M{cx - 16},{eave + 1} Q{cx},{eave - 6} {cx + 8},{eave - 7} M{cx + cw - 8},{eave - 7} Q{cx + cw},{eave - 6} {cx + cw + 16},{eave + 1}",
+                      "pen", 2.4, stroke=PAPER_LIGHT))
+    # lit shōji window: an amber wash behind a lattice
+    wx, wy, ww, wh = cx + 10, eave + 10, 48, 24
+    plate.append(f'<ellipse cx="{wx + ww / 2}" cy="{wy + wh / 2}" rx="38" ry="24" fill="{AMBER}" fill-opacity=".2" filter="url(#wash)" class="glow"/>')
+    plate.append(f'<rect x="{wx}" y="{wy}" width="{ww}" height="{wh}" fill="{AMBER}" fill-opacity=".5" class="glow"/>')
+    lattice = f"M{wx},{wy} h{ww} v{wh} h-{ww} Z " + " ".join(f"M{wx + k * 12},{wy} v{wh}" for k in range(1, 4)) + f" M{wx},{wy + wh / 2} h{ww}"
+    # doorway with a noren curtain in three panels
+    dx = cx + 74
+    door = f"M{dx},{cy} V{eave + 6} H{dx + 30} V{cy}"
+    plate.append(f'<path d="M{dx + 1},{eave + 7} h28 v15 h-28 Z" fill="{INK}" fill-opacity=".78"/>')
+    plate.append(path(f"M{dx + 10.5},{eave + 7} v15 M{dx + 19.5},{eave + 7} v15", "pen", .9, stroke=PAPER_LIGHT))
+    plate.append(f'<circle cx="{dx + 15}" cy="{eave + 14}" r="3" fill="none" stroke="{PAPER_LIGHT}" stroke-width=".9"/>')
+    plate.append(path(f"M{cx},{cy} V{eave} H{cx + cw} V{cy} {lattice} {door} {roof}", "ink", 1.1, draw=True, delay=1.8, dur=2.2))
+    # vertical sign board
+    plate.append(f'<rect x="{cx - 14}" y="{eave + 6}" width="11" height="34" fill="{PAPER_LIGHT}" stroke="{INK}" stroke-width=".9"/>')
+    plate.append(text(cx - 8.5, eave + 19, "喫", "serif", 9, INK, "middle"))
+    plate.append(text(cx - 8.5, eave + 32, "茶", "serif", 9, INK, "middle"))
+    # the red paper lantern, swinging gently, with a warm glow
+    lx0, ly0 = cx + cw - 6, eave + 2
+    plate.append(f'<g class="sway" style="transform-origin:{lx0}px {ly0}px">'
+                 f'<path d="M{lx0},{ly0} v6" stroke="{INK}" stroke-width=".9"/>'
+                 f'<ellipse cx="{lx0}" cy="{ly0 + 16}" rx="13" ry="12" fill="{AMBER}" fill-opacity=".25" filter="url(#wash)" class="glow"/>'
+                 f'<ellipse cx="{lx0}" cy="{ly0 + 16}" rx="7" ry="10" fill="{RUST}" fill-opacity=".85" stroke="{INK}" stroke-width=".8"/>'
+                 f'<path d="M{lx0 - 6},{ly0 + 12} h12 M{lx0 - 7},{ly0 + 16} h14 M{lx0 - 6},{ly0 + 20} h12" stroke="{INK}" stroke-width=".4" opacity=".6"/>'
+                 f'<path d="M{lx0 - 3},{ly0 + 6} h6 M{lx0 - 3},{ly0 + 26} h6" stroke="{INK}" stroke-width="1.6"/></g>')
+    # a cup of coffee steaming on the bench outside
+    plate.append(path(f"M{cx + 40},{cy - 6} h26 M{cx + 43},{cy - 6} v6 M{cx + 63},{cy - 6} v6", "ink", .9))
+    plate.append(path(f"M{cx + 49},{cy - 7} v-6 h8 v6 M{cx + 57},{cy - 11} q4,0 0,3", "ink", .8))
+    for k in range(2):
+        plate.append(path(f"M{cx + 51 + k * 3},{cy - 15} q-4,-5 0,-9 q4,-5 0,-9", "pen steam", .8,
+                          extra=f'style="animation-delay:{k * 3:.0f}s"'))
+    plate.append(text(cx + cw + 22, cy + 6, "Kissa Kosui", "hand fade", 19, INK, extra='style="animation-delay:3.4s"'))
+    plate.append(text(cx + cw + 128, cy + 6, "喫茶 湖水", "serif fade", 12, GRAPHITE, extra='style="animation-delay:3.5s"'))
 
-    # pines beside the café, snow-laden
-    for (tx, ty, th) in [(780, 556, 58), (762, 562, 40), (1218, 560, 54), (1240, 566, 36)]:
-        tiers = []
-        for k in range(4):
-            yy = ty - th * (k / 4)
-            ww = th * 0.34 * (1 - k / 5)
-            tiers.append(f"M{f1(tx - ww)},{f1(yy)} L{tx},{f1(yy - th * .32)} L{f1(tx + ww)},{f1(yy)}")
-        plate.append(path(" ".join(tiers) + f" M{tx},{ty} v8", "ink", 1.0, draw=True, delay=2.0, dur=1.6))
-        snowy = " ".join(
-            f"M{f1(tx - th * .3 * (1 - k / 5) + 3)},{f1(ty - th * (k / 4) - 3)} "
-            f"Q{tx},{f1(ty - th * (k / 4) - th * .22)} {f1(tx + th * .2 * (1 - k / 5))},{f1(ty - th * (k / 4) - 5)}"
-            for k in range(4)
-        )
-        plate.append(path(snowy, "pen", 2.2, stroke=PAPER_LIGHT, extra='opacity=".95"'))
+    # black pines, flat cloud-pads of needles holding snow
+    def kuromatsu(bx, by, s, lean):
+        trunk = f"M{bx},{by} C{bx + lean * .4 * s},{by - 30 * s} {bx - lean * .3 * s},{by - 52 * s} {bx + lean * s},{by - 72 * s}"
+        pads, snow, br = [], [], []
+        for (ox, oy, r) in ((lean * .9, -74, 27), (-16, -52, 21), (18 + lean * .3, -40, 23), (-8, -26, 16)):
+            px2, py2, rr = bx + ox * s, by + oy * s, r * s
+            br.append(f"M{f1(bx + ox * s * .3)},{f1(py2 + 8 * s)} Q{f1(px2 - ox * s * .2)},{f1(py2 + 6 * s)} {f1(px2)},{f1(py2 + 2 * s)}")
+            pads.append(f"M{f1(px2 - rr)},{f1(py2 + 5 * s)} q{f1(-rr * .1)},{f1(-8 * s)} {f1(rr * .3)},{f1(-9 * s)} "
+                        f"q{f1(rr * .2)},{f1(-9 * s)} {f1(rr * .6)},{f1(-4 * s)} q{f1(rr * .4)},{f1(-9 * s)} {f1(rr * .7)},{f1(1 * s)} "
+                        f"q{f1(rr * .45)},{f1(-2 * s)} {f1(rr * .4)},{f1(12 * s)} Z")
+            snow.append(f"M{f1(px2 - rr * .75)},{f1(py2 - 4 * s)} Q{f1(px2)},{f1(py2 - 15 * s)} {f1(px2 + rr * .75)},{f1(py2 - 4 * s)}")
+        g = path(trunk, "ink", 2.2 * s) + path(" ".join(br), "ink", 1.1 * s)
+        g += f'<path d="{" ".join(pads)}" fill="{PAPER_DARK}" stroke="{INK}" stroke-width="{.9 * s:.2f}" stroke-linejoin="round"/>'
+        g += path(" ".join(snow), "pen", 2.6 * s, stroke=PAPER_LIGHT)
+        return f'<g class="fade" style="animation-delay:2.2s">{g}</g>'
+
+    plate.append(kuromatsu(748, 586, 1.4, 16))
+    plate.append(kuromatsu(1262, 560, 1.15, -22))
 
     plate.append("</g></g>")  # end masked plate
     out += plate
@@ -352,7 +360,7 @@ def build() -> str:
     out.append(text(lx, 470, "UNESCO INSTITUTE FOR STATISTICS  ·  M.SC. MCGILL  ·  B.SC. HKU", "caps", 12, GRAPHITE))
 
     # caption, like a plate in a folio
-    out.append(text(1176, 588, "Mont-Tremblant, vue de la rivière", "ital", 15, SLATE, "end"))
+    out.append(text(1176, 588, "Hakone, vue du lac Ashi", "ital", 15, SLATE, "end"))
     out.append(text(1188, 588, "PLANCHE II", "caps", 11, GRAPHITE))
 
     out.append(paper_finish(W, H))

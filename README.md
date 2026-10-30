@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://ellensyuu.github.io">
-    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. I model rare, high-impact events — floods, financial tail risk, gaps in education data — and build the software that makes those models trustworthy. Drawing: Mont-Tremblant in winter, seen across the river from a lit café.">
+    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. I model rare, high-impact events — floods, financial tail risk, gaps in education data — and build the software that makes those models trustworthy. Drawing: Mount Fuji in winter across Lake Ashi in Hakone, with the torii in the water and a lit kissaten on the shore.">
   </a>
 </p>
 
