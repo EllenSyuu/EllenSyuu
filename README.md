@@ -12,6 +12,7 @@
 
 <p align="center">
   <img src="assets/ledger.svg" width="100%" alt="Recent work: the last five weeks as a hand-drawn calendar, with a tick for every day of work.">
+  <img src="assets/workbench.svg" width="100%" alt="Latest from the workbench: my most recently updated public repositories and their latest commits, redrawn each morning.">
 </p>
 
 <p align="center">
@@ -46,4 +47,7 @@
   </sub>
 </p>
 
-<!-- Drawn by scripts/ (cover.py, cards.py, ledger.py; shared kit in draft.py and sketch.py). The ledger is redrawn every morning by .github/workflows/ledger.yml. -->
+<!-- Generated from scripts/README.template.md by scripts/daily.py — edit the template, not this file.
+     Drawn by scripts/ (cover.py, cards.py, ledger.py, daily.py; shared kit in draft.py and sketch.py).
+     Every morning .github/workflows/ledger.yml redraws the ledger and the workbench, and repoints
+     each card at its repository once that repository is public. -->
