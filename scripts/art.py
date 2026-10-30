@@ -18,25 +18,25 @@ GRAPHITE = "#4a5363"
 
 # Pigments, named as on a palette. Each plate picks its own few.
 PIG = {
-    # keys are roles in the drawings; values are the pencils actually used
-    "prussian": "#1f9a6b",   # emerald
-    "indigo": "#2f7d55",     # forest green
-    "cerulean": "#3fbf9b",   # jade
-    "rose": "#f7c948",       # Naples yellow
-    "madder": "#d9536f",
-    "vermilion": "#ea4f2f",
-    "sienna": "#d48a2c",     # raw sienna
-    "sepia": "#8a6a3f",
-    "sakura": "#f39cb6",
-    "sap": "#8cc63f",        # spring green
-    "viridian": "#15946c",
-    "teal": "#2fb29a",
-    "coral": "#f7a23b",      # apricot
-    "lavender": "#b8d44a",   # chartreuse
-    "slate": "#7fb87a",      # sage
-    "amber": "#f6b726",
-    "sand": "#f0cf6a",
-    "snow": "#ffffff",
+    # roles in the drawings -> the website's palette (src/components/cases/kit.js)
+    "prussian": "#46526a",   # slate ink
+    "indigo": "#34425a",     # deep ink
+    "cerulean": "#8c98aa",   # cool graphite, for water
+    "rose": "#e0a046",       # amber: dawn, dusk, lamplight
+    "madder": "#a3432a",     # rust
+    "vermilion": "#cf602b",  # maple orange
+    "sienna": "#a84a26",
+    "sepia": "#6d5c4c",
+    "sakura": "#e59a76",     # blossom, as the site's warm peach
+    "sap": "#7c8a5c",        # the site's sage
+    "viridian": "#5d6b49",
+    "teal": "#7f8da0",
+    "coral": "#d9743f",
+    "lavender": "#b4bcc7",   # faint graphite
+    "slate": "#8a96a8",
+    "amber": "#e0a046",
+    "sand": "#e3cfa6",
+    "snow": "#fbf8f1",
 }
 
 
@@ -111,6 +111,7 @@ def _light(color: str) -> bool:
 
 
 _ids = [0]
+WARM = {"#e0a046", "#cf602b", "#a3432a", "#a84a26", "#e59a76", "#d9743f"}
 PENCIL_AREA = 5200  # px²: larger than this, colour goes on as pencil, not as a flat wash
 
 
@@ -126,6 +127,9 @@ def wash(d: str, color: str, op: float = 0.4, f: int = 0, extra: str = "") -> st
     box = _bbox(d)
     if box is None:
         return ""
+    if color.lower() in WARM and (box[2] - box[0]) * (box[3] - box[1]) < 26000:
+        return f'<path d="{d}" fill="{color}" fill-opacity="{min(op, .7):.2f}" filter="url(#wc{f})" {extra}/>'
+
     _ids[0] += 1
     cid = f"cp{_ids[0]}"
     rng = random.Random(zlib.crc32(d.encode()))

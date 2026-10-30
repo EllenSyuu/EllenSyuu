@@ -15,7 +15,7 @@ from sketch import (
 )
 
 W, H = 600, 400
-ROMAN = ["III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
+ROMAN = ["II", "IV", "III", "I", "V", "VI", "VII", "VIII"]  # I–IV match the website's case studies
 
 WORKS = [
     dict(slug="covarchimax", over="M.SC. THESIS · MCGILL 2026", title="covarchimax",
@@ -224,8 +224,12 @@ def card(k: int, w: dict) -> str:
     rng = random.Random(100 + k)
     o = [svg_open(W, H, f"{w['title']} — {w['pkg']}", f"{w['q']} {w['value']}: {w['label']}.",
                   css=".card-in{animation:fade 1s ease both}")]
-    o.append(path(sketch_rect(rng, 14, 14, W - 28, H - 28, amp=1.2, overshoot=5), "pen", .9, extra='opacity=".75"'))
-    o.append(path(sketch_rect(rng, 20, 20, W - 40, H - 40, amp=.8, overshoot=2), "pen", .5, extra='opacity=".45"'))
+    # the website's card: a lighter sheet, a hairline ring, an inner rule 6 px in, a soft shadow
+    o.append('<filter id="cardshadow" x="-10%" y="-10%" width="120%" height="130%">'
+             '<feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#22314a" flood-opacity=".14"/></filter>')
+    o.append(f'<rect x="12" y="10" width="{W - 24}" height="{H - 30}" fill="{PAPER_LIGHT}" stroke="{INK}" '
+             f'stroke-opacity=".3" stroke-width=".75" filter="url(#cardshadow)"/>')
+    o.append(f'<rect x="18" y="16" width="{W - 36}" height="{H - 42}" fill="none" stroke="{INK}" stroke-opacity=".3" stroke-width=".75"/>')
 
     lx = 44
     o.append(text(lx, 58, f"PLANCHE {ROMAN[k]}", "caps", 11, RUST))
@@ -239,10 +243,10 @@ def card(k: int, w: dict) -> str:
         o.append(text(lx, 186 + j * 23, line, "serif", 19, INK))
 
     o.append(path(f"M{lx},284 h40", "pen", .8))
-    o.append(text(lx, 314, w["value"], "serif", 27, RUST))
+    o.append(text(lx, 306, w["value"], "serif", 27, RUST))
     for j, line in enumerate(wrap(w["label"], "serif-i", 15, 290)[:2]):
-        o.append(text(lx, 334 + j * 17, line, "ital", 15, SLATE))
-    o.append(text(lx, 374, w["tech"], "caps", 9.5, GRAPHITE))
+        o.append(text(lx, 326 + j * 16, line, "ital", 15, SLATE))
+    o.append(text(lx, 364, w["tech"], "caps", 9.5, GRAPHITE))
 
     # vignette
     fx, fy = 362, 92
@@ -275,7 +279,7 @@ def heading(title: str, over: str, note: str, dest: Path) -> None:
 
 
 def main() -> None:
-    heading("Selected work", "PLANCHES III – X", "each card opens the repository, the live site or the case study",
+    heading("Selected work", "PLANCHES I – VIII", "each card opens the repository, the live site or the case study",
             Path("assets/heading-work.svg"))
     out = Path("assets/works")
     out.mkdir(parents=True, exist_ok=True)

@@ -30,7 +30,9 @@ def fuji_dawn() -> str:
     # sky: rose dawn low, cool blue high
     o.append(wash(f"M-20,-20 H{PW + 20} V210 Q{PW / 2},240 -20,215 Z", PIG["cerulean"], .22, f=3))
     o.append(wash(f"M-20,150 Q{PW / 2},120 {PW + 20},160 V330 H-20 Z", PIG["rose"], .38, f=0))
-    o.append(wash(blob(rng, 520, 205, 120, 46), PIG["coral"], .3, f=1))
+    cl = "M440,214 q-4,-20 20,-22 q8,-20 34,-12 q18,-16 40,0 q26,-4 28,18 q18,4 8,16 h-122 q-12,0 -8,0 Z"
+    o.append(wash(cl, PIG["coral"], .42, f=1))
+    o.append(stroke(cl, .9, INK, .8))
     o.append(f'<circle cx="548" cy="210" r="14" fill="{PIG["snow"]}" opacity=".9" filter="url(#soft)"/>')
     # a few long cloud streaks in graphite
     o.append(stroke("M60,96 q120,-10 240,-2 M330,120 q90,-6 170,0 M90,150 q70,-4 130,2", .6, GRAPHITE, .35))
@@ -127,7 +129,7 @@ def fuji_dawn() -> str:
     reeds = " ".join(f"M{f1(x)},{f1(y)} q{f1(rng.uniform(-4, 4))},{f1(-rng.uniform(10, 26) / 2)} {f1(rng.uniform(-6, 6))},{f1(-rng.uniform(10, 26))}"
                      for x, y in [(rng.uniform(200, 520), rng.uniform(512, 560)) for _ in range(16)])
     o.append(stroke(reeds, .6, INK, .4))
-    o.append(swatches(330, 30, [("emerald", PIG["prussian"]), ("Naples yellow", PIG["rose"]), ("vermilion", PIG["vermilion"])]))
+    o.append(swatches(330, 30, [("slate ink", PIG["prussian"]), ("amber", PIG["rose"]), ("vermilion", PIG["vermilion"])]))
     o.append(f'<g>{_snow(rng, 34)}</g>')
     return "".join(o)
 
@@ -139,7 +141,7 @@ def kyoto_evening() -> str:
     o = []
     VX, VY = 340, 330
     # night sky: deep indigo, a paler glow around the pagoda
-    o.append(wash(f"M-40,-40 H{PW + 40} V380 H-40 Z", PIG["rose"], .42, f=3))
+    o.append(wash(f"M-40,-40 H{PW + 40} V380 H-40 Z", PIG["rose"], .26, f=3))
     o.append(wash(blob(rng, VX, 210, 190, 140, n=12), PIG["coral"], .3, f=0))
     o.append(wash(blob(rng, VX + 20, 280, 220, 70), PIG["rose"], .4, f=1))
 
@@ -264,7 +266,7 @@ def kyoto_evening() -> str:
         o.append(wash(f"M{fx - 9 * sc},{fy - 22 * sc} h18 v4 h-18 Z", PIG["madder"], .9, f=4))
         o.append(stroke(f"M{fx},{fy - 66 * sc} V{fy - 30 * sc}", .7 * sc, INK, .9))
         o.append(f'<ellipse cx="{fx + 10 * sc}" cy="{fy + 3}" rx="{22 * sc}" ry="{4 * sc}" fill="{PIG["indigo"]}" opacity=".3"/>')
-    o.append(swatches(330, 30, [("raw sienna", PIG["sienna"]), ("vermilion", PIG["vermilion"]), ("chartreuse", PIG["lavender"])]))
+    o.append(swatches(330, 30, [("ink", PIG["indigo"]), ("vermilion", PIG["vermilion"]), ("amber", PIG["amber"])]))
     o.append(f'<g>{_snow(rng, 70)}</g>')
     return "".join(o)
 
@@ -368,7 +370,7 @@ def arashiyama_spring() -> str:
         petals.append(f'<ellipse class="petal" cx="{f1(rng.uniform(0, PW))}" cy="0" rx="2.4" ry="1.5" fill="{PIG["sakura"]}" '
                       f'style="--dx:{rng.uniform(40, 120):.0f}px;animation-duration:{dur:.1f}s;animation-delay:-{rng.uniform(0, dur):.1f}s"/>')
     o.append("".join(petals))
-    o.append(swatches(330, 30, [("sakura pink", PIG["sakura"]), ("spring green", PIG["sap"]), ("Naples yellow", PIG["rose"])]))
+    o.append(swatches(330, 30, [("peach", PIG["sakura"]), ("sage", PIG["sap"]), ("sepia", PIG["sepia"])]))
     return "".join(o)
 
 
@@ -446,7 +448,7 @@ def kamakura_summer() -> str:
     bx, by = 140, 572
     o.append(stroke(f"M{bx - 18},{by} m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M{bx + 26},{by} m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 "
                     f"M{bx - 18},{by} L{bx},{by - 18} L{bx + 26},{by} M{bx},{by - 18} L{bx + 18},{by - 18} L{bx + 26},{by} M{bx - 2},{by - 22} h8 M{bx + 18},{by - 18} l2,-8 h6", .9, INK, .85))
-    o.append(swatches(330, 30, [("jade", PIG["cerulean"]), ("spring green", PIG["sap"]), ("apricot", PIG["coral"])]))
+    o.append(swatches(330, 30, [("graphite", PIG["cerulean"]), ("sage", PIG["sap"]), ("maple", PIG["coral"])]))
     return "".join(o)
 
 
@@ -517,8 +519,8 @@ def sheet(k: int) -> str:
 
 
 SCENES = [
-    ("Hakone, le lac Ashi à l'aube", "PLANCHE II", lambda: fuji_dawn() + sheet(0)),
-    ("Kyōto, Yasaka, un soir de neige", "PLANCHE III", lambda: kyoto_evening() + sheet(1)),
-    ("Arashiyama, le Togetsu-kyō au printemps", "PLANCHE IV", lambda: arashiyama_spring() + sheet(2)),
-    ("Kamakura, Shichirigahama en été", "PLANCHE V", lambda: kamakura_summer() + sheet(3)),
+    ("Le lac Ashi · Hakone", "Planche A.", lambda: fuji_dawn() + sheet(0)),
+    ("Un soir de neige · Kyōto", "Planche B.", lambda: kyoto_evening() + sheet(1)),
+    ("Printemps · Arashiyama", "Planche C.", lambda: arashiyama_spring() + sheet(2)),
+    ("L'été · Kamakura", "Planche D.", lambda: kamakura_summer() + sheet(3)),
 ]

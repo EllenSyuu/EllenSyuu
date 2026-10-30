@@ -16,9 +16,9 @@ from xml.sax.saxutils import escape
 
 FONTS = Path(__file__).parent / "fonts"
 
-PAPER = os.environ.get("PAPER", "#fcfcfa")  # drawing-paper white
-PAPER_LIGHT = "#ffffff"
-PAPER_DARK = "#eeeeea"
+PAPER = os.environ.get("PAPER", "#f6f1e6")  # the website's atelier paper
+PAPER_LIGHT = "#fbf8f1"
+PAPER_DARK = "#eee7d9"
 INK = "#22314a"
 SLATE = "#46526a"
 GRAPHITE = "#6f7b8c"
@@ -95,7 +95,7 @@ def svg_open(w: int, h: int, title: str, desc: str, fonts=("serif", "serif-i", "
 
 
 def paper_finish(w: int, h: int) -> str:
-    return f'<rect width="{w}" height="{h}" filter="url(#grain)" opacity=".45" pointer-events="none"/></svg>'
+    return f'<rect width="{w}" height="{h}" filter="url(#grain)" opacity=".8" pointer-events="none"/></svg>'
 
 
 # ---------------------------------------------------------------- text metrics

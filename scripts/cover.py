@@ -9,7 +9,7 @@ import argparse
 import base64
 from pathlib import Path
 
-from plates import OUT as PLATES, split
+from plates import CROP, OUT as PLATES, SCALE, SX, SY, TX, TY, split
 from scenes import PW, SCENES
 from sketch import (
     GRAPHITE, INK, RUST, SLATE, f1, paper_finish, path, svg_open, text, text_width,
@@ -95,20 +95,17 @@ def build(only: int | None = None) -> str:
     def anim(k):
         return "" if only is not None else f' class="sc sc{k}" style="animation-delay:{k * CYCLE - 1.5:.1f}s"'
 
-    o.append(f'<clipPath id="plateclip"><rect x="{PX0 + 20}" y="10" width="{PW - 30}" height="{H - 30}"/></clipPath>')
+    o.append(f'<clipPath id="plateclip"><rect x="{PX0 + SX}" y="{SY}" width="{(CROP[2] - CROP[0]) * SCALE:.1f}" height="{(CROP[3] - CROP[1]) * SCALE:.1f}"/></clipPath>')
     for k, (cap, num, draw) in enumerate(SCENES):
         if only is None or k == only:
             img = base64.b64encode((PLATES / f"plate-{k + 2}.webp").read_bytes()).decode()
             _, live = split(k)
             o.append(f'<g{anim(k)}><image x="{PX0}" y="0" width="{PW}" height="{H}" href="data:image/webp;base64,{img}"/>'
-                     f'<g clip-path="url(#plateclip)"><g transform="translate({PX0},0)">{live}</g></g></g>')
+                     f'<g clip-path="url(#plateclip)"><g transform="translate({PX0 + TX:.2f},{TY:.2f}) scale({SCALE})">{live}</g></g></g>')
 
-    for k, (cap, num, _) in enumerate(SCENES):
-        if only is None or k == only:
-            o.append(f'<g{anim(k)}>{text(1168, 590, cap, "ital", 15, SLATE, "end")}{text(1180, 590, num, "caps", 10.5, GRAPHITE)}</g>')
     if only is None:
         for k in range(N):
-            o.append(f'<circle class="dot dot{k}" cx="{PX0 + 40 + k * 16}" cy="586" r="3.2" fill="{INK}" '
+            o.append(f'<circle class="dot dot{k}" cx="{W - 36 - (N - 1 - k) * 14}" cy="592" r="3" fill="{INK}" '
                      f'style="animation-delay:{k * CYCLE - 1.5:.1f}s"/>')
 
     o.append(f'<g class="gull"><g transform="translate({W + 10},92)"><path class="flap" d="M-11,0 Q-5,-6 0,0 Q5,-6 11,0" '

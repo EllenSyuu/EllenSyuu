@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://ellensyuu.github.io">
-    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. I model rare, high-impact events — floods, financial tail risk, gaps in education data — and build the software that makes those models trustworthy. Drawing: a folio of coloured-pencil engineering plates of Japan that turn one after another — Fuji at dawn over Lake Ashi, a snowy evening below the Yasaka pagoda in Kyoto, Arashiyama in spring, and the Kamakura coast in summer.">
+    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. I model rare, high-impact events — floods, financial tail risk, gaps in education data — and build the software that makes those models trustworthy. Drawing: a folio of ink-and-pencil engineering plates of Japan, each on a sheet with a paper clip and a pencil, that turn one after another — Fuji at dawn over Lake Ashi, a snowy evening below the Yasaka pagoda in Kyoto, Arashiyama in spring, and the Kamakura coast in summer.">
   </a>
 </p>
 
