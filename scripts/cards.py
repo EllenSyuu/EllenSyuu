@@ -531,7 +531,7 @@ def more_row(k: int, row) -> str:
     o.append(text(72, 40, when, "ital", 15, DARK_SLATE))
     o.append(text(230, 40, title, "title", 21, LIGHT_SLATE))
     o.append(text(230, 62, sub, "caps", 9.5, GRAPH))
-    o.append(text(700, 46, desc, "sans", 14, SLATE))
+    o.append(text(650, 46, desc, "sans", 14, SLATE))
     o.append(text(1208, 72, go, "hand", 14, "#a84a26", "end"))
     return doc(w, h, title, f"{sub.title()}. {desc}", "".join(o))
 
