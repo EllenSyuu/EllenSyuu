@@ -511,16 +511,48 @@ def heading(n: str, title: str, lede: str, dest: Path, w=1280, h=120) -> None:
     dest.write_text(doc(w, h, title, lede, "".join(o)), encoding="utf-8")
 
 
+MORE = [
+    ("2023 — 26", "Hybrid immunity in calendar time", "VVI · PYTHON PACKAGE · FROM MY HKU FINAL-YEAR PROJECT",
+     "Booster timing and Omicron infection; a million-person cohort fits in 13 s.", "read the case study"),
+    ("2026 —", "Bayesian Cohort Model", "R / STAN · SDG 4.1.4 · WORK IN PROGRESS",
+     "An independent reproduction of a published model of out-of-school rates.", "open the repository"),
+    ("2026 —", "HosiCite", "A CITATION ATLAS · LIVE",
+     "Who cites whom in a research field, drawn as an old painted map with a timeline.", "open the live site"),
+    ("2026 —", "ellensyuu.github.io", "THIS SKETCHBOOK",
+     "The interactive versions of these plates, plus experience and public-interest work.", "visit the site"),
+]
+
+
+def more_row(k: int, row) -> str:
+    """One row in the style of the website's 'Leadership & community' list."""
+    when, title, sub, desc, go = row
+    w, h = 1280, 92
+    o = [line(f"M72,{h - 1} H1208", .75, INK, .25)]
+    o.append(text(72, 40, when, "ital", 15, DARK_SLATE))
+    o.append(text(230, 40, title, "title", 21, LIGHT_SLATE))
+    o.append(text(230, 62, sub, "caps", 9.5, GRAPH))
+    o.append(text(700, 46, desc, "sans", 14, SLATE))
+    o.append(text(1208, 72, go, "hand", 14, "#a84a26", "end"))
+    return doc(w, h, title, f"{sub.title()}. {desc}", "".join(o))
+
+
 def main() -> None:
     out = Path("assets/works")
     out.mkdir(parents=True, exist_ok=True)
     for old in out.glob("*.svg"):
         old.unlink()
     for k, w in enumerate(WORKS):
-        (out / f"{w['slug']}.svg").write_text(card(k, w), encoding="utf-8")
-    heading("02.", "Selected work", "Each plate opens the repository, the live site or the case study it comes from.",
+        if w["slug"] in FEATURED:
+            (out / f"{w['slug']}.svg").write_text(card(k, w), encoding="utf-8")
+    for k, row in enumerate(MORE):
+        (out / f"more-{k + 1}.svg").write_text(more_row(k, row), encoding="utf-8")
+    heading("02.", "Selected work", "Four case studies, each a different side of the same work: method, data system, model, product.",
             Path("assets/heading-work.svg"))
-    print(f"wrote {len(WORKS)} cards to {out} and the section heading")
+    heading("03.", "More work", "Smaller and in-progress pieces.", Path("assets/heading-more.svg"))
+    print(f"wrote {len(FEATURED)} cards, {len(MORE)} rows and two headings")
+
+
+FEATURED = {"03-covarchimax", "06-sdg", "04-tailfm", "08-immca"}
 
 
 if __name__ == "__main__":

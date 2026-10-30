@@ -5,28 +5,37 @@
 </p>
 
 <p align="center">
-  <img src="assets/ledger.svg" width="100%" alt="The last five weeks as a hand-drawn calendar, with a tick for every day of work.">
+  <b>Ziyi (Ellen) Zhou</b> · Statistical ML &amp; Data Engineering · Montréal<br>
+  I develop statistically rigorous methods and turn them into tested, reproducible software —<br>
+  from multivariate extremes to large-scale education data.
 </p>
 
 <p align="center">
-  <img src="assets/heading-work.svg" width="100%" alt="Selected work">
+  <img src="assets/ledger.svg" width="100%" alt="Recent work: the last five weeks as a hand-drawn calendar, with a tick for every day of work.">
 </p>
 
 <p align="center">
-  <a href="https://github.com/EllenSyuu/SAC-thesis-2026"><img src="assets/works/03-covarchimax.svg" width="49%" alt="covarchimax — M.Sc. thesis, McGill 2026. Does heavy rain hit several places at the same time, and is that changing? R package for covariate-dependent Archimax copulas."></a>
-  <a href="https://ellensyuu.github.io/#case-tailfm"><img src="assets/works/04-tailfm.svg" width="49%" alt="TailFM — can a neural network learn how heavy a tail is, and how often extremes arrive together? PyTorch, amortized inference."></a>
+  <img src="assets/heading-work.svg" width="100%" alt="02. Selected work">
+</p>
+
+<p align="center">
+  <a href="https://github.com/EllenSyuu/SAC-thesis-2026"><img src="assets/works/03-covarchimax.svg" width="49%" alt="Planche II, covarchimax — M.Sc. thesis, McGill 2026. Does heavy rain hit several places at the same time, and is that changing? An R package for covariate-dependent Archimax copulas."></a>
+  <a href="https://github.com/EllenSyuu/SDG"><img src="assets/works/06-sdg.svg" width="49%" alt="Planche I, SDG 4 Data Revision Tracker — how much do education statistics change from one data release to the next? Python, Polars, strict typing and tests."></a>
 </p>
 <p align="center">
-  <a href="https://ellensyuu.github.io/#case-vvi"><img src="assets/works/05-vvi.svg" width="49%" alt="VVI — hybrid immunity in calendar time. Does a booster before your first Omicron infection protect you, or imprint you?"></a>
-  <a href="https://github.com/EllenSyuu/SDG"><img src="assets/works/06-sdg.svg" width="49%" alt="SDG 4 Revision Tracker — how much do education statistics change from one data release to the next? Python, Polars."></a>
+  <a href="https://ellensyuu.github.io/#case-tailfm"><img src="assets/works/04-tailfm.svg" width="49%" alt="Planche IV, TailFM — can a neural network learn how heavy a tail is, and how often extremes arrive together? PyTorch, amortized inference."></a>
+  <a href="https://ellensyuu.github.io/IMMCA/"><img src="assets/works/08-immca.svg" width="49%" alt="Planche VI, IMMCA — Canadian immigration pathways: federal, Québec and provincial routes and what they ask, in three languages, refreshed daily."></a>
 </p>
+
 <p align="center">
-  <a href="https://github.com/EllenSyuu/BCM"><img src="assets/works/07-bcm.svg" width="49%" alt="Bayesian Cohort Model, SDG 4.1.4 — an independent reproduction of a published model for out-of-school rates. Work in progress."></a>
-  <a href="https://ellensyuu.github.io/IMMCA/"><img src="assets/works/08-immca.svg" width="49%" alt="IMMCA — Canadian immigration pathways: federal, Québec and provincial routes and what they ask, in three languages, refreshed daily."></a>
+  <img src="assets/heading-more.svg" width="100%" alt="03. More work">
 </p>
+
 <p align="center">
-  <a href="https://hosi-cite.vercel.app"><img src="assets/works/09-hosicite.svg" width="49%" alt="HosiCite — a citation atlas: who cites whom, drawn as an old painted map with a timeline."></a>
-  <a href="https://ellensyuu.github.io"><img src="assets/works/10-site.svg" width="49%" alt="ellensyuu.github.io — the full portfolio, drawn in ink on warm paper."></a>
+  <a href="https://ellensyuu.github.io/#case-vvi"><img src="assets/works/more-1.svg" width="100%" alt="Hybrid immunity in calendar time (VVI) — booster timing and Omicron infection, from my HKU final-year project."></a>
+  <a href="https://github.com/EllenSyuu/BCM"><img src="assets/works/more-2.svg" width="100%" alt="Bayesian Cohort Model, SDG 4.1.4 — an independent reproduction, work in progress."></a>
+  <a href="https://hosi-cite.vercel.app"><img src="assets/works/more-3.svg" width="100%" alt="HosiCite — a citation atlas drawn as an old painted map."></a>
+  <a href="https://ellensyuu.github.io"><img src="assets/works/more-4.svg" width="100%" alt="ellensyuu.github.io — the full portfolio."></a>
 </p>
 
 <p align="center">
