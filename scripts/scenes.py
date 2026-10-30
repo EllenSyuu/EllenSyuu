@@ -47,7 +47,7 @@ def fuji_dawn() -> str:
             y = top + (base - top) * (1 - (1 - t) ** 2.4)
         pts.append((x, y))
     fd = smooth(pts) + f" L{PW + 30},{base + 30} L-30,{base + 30} Z"
-    o.append(wash(fd, PIG["lavender"], .42, f=1))
+    o.append(wash(fd, PIG["slate"], .4, f=1))
     o.append(wash(f"M{px + 4},{top} L{px + 160},{base} L{PW + 30},{base + 30} L{PW + 30},{top} Z", PIG["prussian"], .32, f=2,
                   extra=f'clip-path="url(#h1m)"'))
     o.insert(0, f'<clipPath id="h1m"><path d="{fd}"/></clipPath>')
@@ -127,7 +127,7 @@ def fuji_dawn() -> str:
     reeds = " ".join(f"M{f1(x)},{f1(y)} q{f1(rng.uniform(-4, 4))},{f1(-rng.uniform(10, 26) / 2)} {f1(rng.uniform(-6, 6))},{f1(-rng.uniform(10, 26))}"
                      for x, y in [(rng.uniform(200, 520), rng.uniform(512, 560)) for _ in range(16)])
     o.append(stroke(reeds, .6, INK, .4))
-    o.append(swatches(330, 30, [("Prussian blue", PIG["prussian"]), ("rose madder", PIG["rose"]), ("vermilion", PIG["vermilion"])]))
+    o.append(swatches(330, 30, [("emerald", PIG["prussian"]), ("Naples yellow", PIG["rose"]), ("vermilion", PIG["vermilion"])]))
     o.append(f'<g>{_snow(rng, 34)}</g>')
     return "".join(o)
 
@@ -139,8 +139,8 @@ def kyoto_evening() -> str:
     o = []
     VX, VY = 340, 330
     # night sky: deep indigo, a paler glow around the pagoda
-    o.append(wash(f"M-40,-40 H{PW + 40} V380 H-40 Z", PIG["lavender"], .42, f=3))
-    o.append(wash(blob(rng, VX, 210, 190, 140, n=12), PIG["indigo"], .22, f=0))
+    o.append(wash(f"M-40,-40 H{PW + 40} V380 H-40 Z", PIG["rose"], .42, f=3))
+    o.append(wash(blob(rng, VX, 210, 190, 140, n=12), PIG["coral"], .3, f=0))
     o.append(wash(blob(rng, VX + 20, 280, 220, 70), PIG["rose"], .4, f=1))
 
     def P(x, y, t):
@@ -264,7 +264,7 @@ def kyoto_evening() -> str:
         o.append(wash(f"M{fx - 9 * sc},{fy - 22 * sc} h18 v4 h-18 Z", PIG["madder"], .9, f=4))
         o.append(stroke(f"M{fx},{fy - 66 * sc} V{fy - 30 * sc}", .7 * sc, INK, .9))
         o.append(f'<ellipse cx="{fx + 10 * sc}" cy="{fy + 3}" rx="{22 * sc}" ry="{4 * sc}" fill="{PIG["indigo"]}" opacity=".3"/>')
-    o.append(swatches(330, 30, [("indigo", PIG["indigo"]), ("vermilion", PIG["vermilion"]), ("burnt sienna", PIG["sienna"])]))
+    o.append(swatches(330, 30, [("raw sienna", PIG["sienna"]), ("vermilion", PIG["vermilion"]), ("chartreuse", PIG["lavender"])]))
     o.append(f'<g>{_snow(rng, 70)}</g>')
     return "".join(o)
 
@@ -368,7 +368,7 @@ def arashiyama_spring() -> str:
         petals.append(f'<ellipse class="petal" cx="{f1(rng.uniform(0, PW))}" cy="0" rx="2.4" ry="1.5" fill="{PIG["sakura"]}" '
                       f'style="--dx:{rng.uniform(40, 120):.0f}px;animation-duration:{dur:.1f}s;animation-delay:-{rng.uniform(0, dur):.1f}s"/>')
     o.append("".join(petals))
-    o.append(swatches(330, 30, [("sakura pink", PIG["sakura"]), ("sap green", PIG["sap"]), ("sepia", PIG["sepia"])]))
+    o.append(swatches(330, 30, [("sakura pink", PIG["sakura"]), ("spring green", PIG["sap"]), ("Naples yellow", PIG["rose"])]))
     return "".join(o)
 
 
@@ -385,7 +385,7 @@ def kamakura_summer() -> str:
     o.append(stroke("M70,128 q60,-12 140,0 M360,86 q80,-10 170,2", .6, GRAPHITE, .35))
     # distant Fuji, faint
     fp = [(x, 290 - 92 * max(0, 1 - abs(x - 520) / 150) ** 1.7) for x in range(360, 690, 6)]
-    o.append(wash(smooth(fp) + " L690,300 L360,300 Z", PIG["lavender"], .45, f=1))
+    o.append(wash(smooth(fp) + " L690,300 L360,300 Z", PIG["slate"], .4, f=1))
     o.append(stroke(smooth(fp), .8, GRAPHITE, .5))
     o.append(wash(smooth([(x, y) for x, y in fp if y < 230]) + " Z", "#fbf9f4", .8, f=4))
     # the horizon and the sea
@@ -446,7 +446,7 @@ def kamakura_summer() -> str:
     bx, by = 140, 572
     o.append(stroke(f"M{bx - 18},{by} m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M{bx + 26},{by} m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 "
                     f"M{bx - 18},{by} L{bx},{by - 18} L{bx + 26},{by} M{bx},{by - 18} L{bx + 18},{by - 18} L{bx + 26},{by} M{bx - 2},{by - 22} h8 M{bx + 18},{by - 18} l2,-8 h6", .9, INK, .85))
-    o.append(swatches(330, 30, [("cerulean", PIG["cerulean"]), ("viridian", PIG["viridian"]), ("coral", PIG["coral"])]))
+    o.append(swatches(330, 30, [("jade", PIG["cerulean"]), ("spring green", PIG["sap"]), ("apricot", PIG["coral"])]))
     return "".join(o)
 
 

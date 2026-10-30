@@ -74,7 +74,7 @@ def build(counts: dict[dt.date, int], today: dt.date) -> str:
         f"A hand-drawn calendar of the five weeks up to {today:%d %B %Y}: "
         f"{ticked} of {len(seen)} days ticked, {total} contributions.",
         fonts=("serif", "serif-i", "hand"),
-        css=".tick{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .5s ease-out forwards}",
+        css=".tick{stroke-dasharray:80;animation:tickdraw .6s ease-out both}@keyframes tickdraw{from{stroke-dashoffset:80}}",
     )]
 
     # ---- left: the note
@@ -120,7 +120,7 @@ def build(counts: dict[dt.date, int], today: dt.date) -> str:
         heavy = n >= 10
         col = RUST if heavy else INK
         sw = 2.4 if n >= 5 else 1.6
-        out.append(f'<path d="{tick_path(cx, cy, 1.0, rng)}" class="ink tick" pathLength="1" '
+        out.append(f'<path d="{tick_path(cx, cy, 1.0, rng)}" class="ink tick" '
                    f'style="stroke:{col};stroke-width:{sw};animation-delay:{delay:.2f}s"/>')
         if heavy:
             out.append(text(x0 + cw - 8, y0 + chh - 8, str(n), "hand", 13, RUST, "end"))

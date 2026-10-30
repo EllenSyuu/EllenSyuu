@@ -18,23 +18,24 @@ GRAPHITE = "#4a5363"
 
 # Pigments, named as on a palette. Each plate picks its own few.
 PIG = {
-    "prussian": "#2f6db5",
-    "indigo": "#4a55a2",
-    "cerulean": "#4aa3df",
-    "rose": "#ef8fa3",
+    # keys are roles in the drawings; values are the pencils actually used
+    "prussian": "#1f9a6b",   # emerald
+    "indigo": "#2f7d55",     # forest green
+    "cerulean": "#3fbf9b",   # jade
+    "rose": "#f7c948",       # Naples yellow
     "madder": "#d9536f",
-    "vermilion": "#e8533a",
-    "sienna": "#c9773e",
-    "sepia": "#8a6a4f",
-    "sakura": "#f2a0b8",
-    "sap": "#7fb069",
-    "viridian": "#2aa189",
-    "teal": "#39a9b5",
-    "coral": "#f49b7a",
-    "lavender": "#9b98e0",
-    "slate": "#8a9bc0",
-    "amber": "#f2b33d",
-    "sand": "#e3c48f",
+    "vermilion": "#ea4f2f",
+    "sienna": "#d48a2c",     # raw sienna
+    "sepia": "#8a6a3f",
+    "sakura": "#f39cb6",
+    "sap": "#8cc63f",        # spring green
+    "viridian": "#15946c",
+    "teal": "#2fb29a",
+    "coral": "#f7a23b",      # apricot
+    "lavender": "#b8d44a",   # chartreuse
+    "slate": "#7fb87a",      # sage
+    "amber": "#f6b726",
+    "sand": "#f0cf6a",
     "snow": "#ffffff",
 }
 
@@ -57,7 +58,7 @@ def defs() -> str:
     return "".join(wc) + """
 <filter id="patchf" x="0" y="0" width="100%" height="100%">
   <feTurbulence type="fractalNoise" baseFrequency="0.009 0.016" numOctaves="3" seed="31" result="n"/>
-  <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  2.0 0 0 0 -0.1"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  2.0 0 0 0 0.12"/>
 </filter>
 <linearGradient id="skyfade" x1="0" y1="0" x2="0" y2="260" gradientUnits="userSpaceOnUse">
   <stop offset="0" stop-color="#000"/><stop offset=".25" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>
@@ -130,13 +131,13 @@ def wash(d: str, color: str, op: float = 0.4, f: int = 0, extra: str = "") -> st
     rng = random.Random(zlib.crc32(d.encode()))
     x0, y0, x1, y1 = box
     area = (x1 - x0) * (y1 - y0)
-    k = min(.95, op * 1.7)
+    k = min(1.0, op * 2.1)
     if area > PENCIL_AREA:
         ang = 26 + rng.uniform(-8, 8)
-        body = hatch(rng, x0, y0, x1, y1, spacing=4.6 - 2.2 * k, angle=ang, lmin=8, lmax=28, gap=.3,
+        body = hatch(rng, x0, y0, x1, y1, spacing=4.0 - 2.0 * k, angle=ang, lmin=8, lmax=28, gap=.3,
                      ops=(.28 * k + .1, .46 * k + .12, .64 * k + .14), sw=.8, color=color, jitter=4)
-        if k > .45:
-            body += hatch(rng, x0, y0, x1, y1, spacing=8 - 3 * k, angle=ang + 64, lmin=6, lmax=18, gap=.5,
+        if k > .35:
+            body += hatch(rng, x0, y0, x1, y1, spacing=7 - 3 * k, angle=ang + 64, lmin=6, lmax=18, gap=.5,
                           ops=(.1 * k + .05, .18 * k + .06, .26 * k + .07), sw=.6, color=color, jitter=5)
         return (f'<g {extra}><clipPath id="{cid}"><path d="{d}"/></clipPath>'
                 f'<g clip-path="url(#{cid})" mask="url(#patchy)">{body}</g></g>')

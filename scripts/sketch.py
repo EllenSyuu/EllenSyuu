@@ -56,10 +56,10 @@ BASE_CSS = f"""
 .caps{{font-family:'Cormorant Garamond',Garamond,serif;font-weight:500;letter-spacing:.2em}}
 .ink{{fill:none;stroke:{INK};stroke-linecap:round;stroke-linejoin:round}}
 .pen{{fill:none;stroke:{GRAPHITE};stroke-linecap:round;stroke-linejoin:round}}
-.draw{{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.2s cubic-bezier(.55,.05,.25,1) forwards}}
+.draw{{stroke-dasharray:1;animation:draw 2.2s cubic-bezier(.55,.05,.25,1) both}}
 .fade{{animation:fade 1.4s ease both}}
 .write{{animation:write 1.6s steps(28,end) both}}
-@keyframes draw{{to{{stroke-dashoffset:0}}}}
+@keyframes draw{{from{{stroke-dashoffset:1}}to{{stroke-dashoffset:0}}}}
 @keyframes fade{{from{{opacity:0}}}}
 @keyframes write{{from{{clip-path:inset(0 100% 0 0)}}to{{clip-path:inset(0 0 0 0)}}}}
 @media (prefers-reduced-motion:reduce){{
