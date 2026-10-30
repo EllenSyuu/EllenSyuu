@@ -113,22 +113,6 @@ def fuji_dawn() -> str:
     o.append(wash("M-30,500 Q200,488 420,506 T710,500 V620 H-30 Z", PIG["snow"], 1, f=2))
     o.append(contour(rng, [(-30, 500), (120, 494), (260, 498), (420, 506), (560, 500), (710, 502)], 1.1, op=.75))
     o.append(wash("M-30,520 Q160,530 300,560 L-30,600 Z", PIG["cerulean"], .16, f=3))
-    # a great black pine leaning in from the right edge
-    trunk = [(700, 600), (664, 520), (676, 452), (640, 392), (586, 354), (530, 336)]
-    tr = ribbon(trunk, 30, 9)
-    o.append(wash(tr, PIG["sepia"], .85, f=4))
-    o.append(tone(rng, "h1t", tr, (520, 320, 710, 600), layers=((2.4, 100), (4, 20)), lmin=3, lmax=9, ops=(.3, .5, .7), color=INK, sw=.5))
-    o.append(stroke(tr, 1.1, INK, .85))
-    for br in ([(642, 396), (690, 360), (720, 350)], [(600, 362), (590, 320), (604, 296)], [(676, 456), (720, 430)]):
-        o.append(wash(ribbon(br, 9, 3), PIG["sepia"], .85, f=4))
-        o.append(stroke(ribbon(br, 9, 3), .8, INK, .8))
-    for (cx, cy, rx, ry) in [(520, 326, 62, 17), (612, 290, 46, 14), (700, 342, 50, 15), (590, 248, 34, 11), (716, 420, 40, 13)]:
-        pad = blob(rng, cx, cy, rx, ry, n=14, wob=.13)
-        o.append(wash(pad, PIG["indigo"], .62, f=2))
-        o.append(tone(rng, f"h1p{cx}", pad, (cx - rx, cy - ry, cx + rx, cy + ry), layers=((2.2, 12), (3.4, 168)), lmin=3, lmax=7, color=INK, ops=(.35, .55, .8), sw=.5))
-        o.append(wash(f"M{cx - rx * .9},{cy - ry * .25} Q{cx - rx * .3},{cy - ry * 1.55} {cx + rx * .2},{cy - ry * 1.1} Q{cx + rx * .7},{cy - ry * 1.4} {cx + rx * .9},{cy - ry * .25} "
-                      f"Q{cx},{cy - ry * .7} {cx - rx * .9},{cy - ry * .25} Z", PIG["snow"], 1, f=4))
-        o.append(stroke(" ".join(f"M{f1(cx + rng.uniform(-rx, rx) * .9)},{f1(cy + ry * .55)} l{f1(rng.uniform(-2, 2))},{f1(rng.uniform(3, 7))}" for _ in range(14)), .6, INK, .7))
     # a stone lantern on the shore, capped with snow, and reeds
     lx, ly = 150, 560
     lan = (f"M{lx - 16},{ly} h32 l-4,-8 h-24 Z M{lx - 5},{ly - 8} v-26 h10 v26 M{lx - 14},{ly - 34} h28 v-20 h-28 Z "

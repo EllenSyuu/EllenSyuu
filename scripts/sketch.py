@@ -7,6 +7,7 @@ subsets so the drawings look the same wherever GitHub shows them.
 from __future__ import annotations
 
 import base64
+import os
 import math
 import random
 from functools import lru_cache
@@ -15,9 +16,9 @@ from xml.sax.saxutils import escape
 
 FONTS = Path(__file__).parent / "fonts"
 
-PAPER = "#f6f1e6"
-PAPER_LIGHT = "#fbf8f1"
-PAPER_DARK = "#eee7d9"
+PAPER = os.environ.get("PAPER", "#f4f4f1")  # museum white: neutral, a breath cool
+PAPER_LIGHT = "#fbfbf9"
+PAPER_DARK = "#e7e7e2"
 INK = "#22314a"
 SLATE = "#46526a"
 GRAPHITE = "#6f7b8c"

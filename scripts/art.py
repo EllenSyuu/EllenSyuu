@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import math
 import random
+import re
+import zlib
 
 from sketch import f1, smooth
 
@@ -33,7 +35,7 @@ PIG = {
     "slate": "#7d8aa3",
     "amber": "#e3a54b",
     "sand": "#d8c3a2",
-    "snow": "#fbf9f4",
+    "snow": "#fbfbf9",
 }
 
 
@@ -53,6 +55,16 @@ def defs() -> str:
   <feComposite in="edge" in2="gm" operator="in"/>
 </filter>""")
     return "".join(wc) + """
+<filter id="patchf" x="0" y="0" width="100%" height="100%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.009 0.016" numOctaves="3" seed="31" result="n"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  2.2 0 0 0 -0.4"/>
+</filter>
+<linearGradient id="skyfade" x1="0" y1="0" x2="0" y2="260" gradientUnits="userSpaceOnUse">
+  <stop offset="0" stop-color="#000"/><stop offset=".25" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>
+<mask id="vfade" maskUnits="userSpaceOnUse" x="-100" y="-100" width="900" height="820">
+  <rect x="-100" y="-100" width="900" height="820" fill="url(#skyfade)"/></mask>
+<mask id="patchy" maskUnits="userSpaceOnUse" x="-100" y="-100" width="900" height="820">
+  <g mask="url(#vfade)"><rect x="-100" y="-100" width="900" height="820" fill="#fff" filter="url(#patchf)"/></g></mask>
 <filter id="bloom" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
 <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>
 <filter id="tooth" x="0" y="0" width="100%" height="100%">
@@ -74,8 +86,53 @@ def defs() -> str:
 
 # ------------------------------------------------------------------ washes
 
+def _bbox(d: str):
+    xs, ys = [], []
+    for cmd, args in re.findall(r"([A-Za-z])([^A-Za-z]*)", d):
+        if not cmd.isupper() or cmd in "ZA":
+            continue
+        nums = [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?", args)]
+        if cmd == "H":
+            xs += nums
+        elif cmd == "V":
+            ys += nums
+        else:
+            xs += nums[0::2]
+            ys += nums[1::2]
+    if not xs or not ys:
+        return None
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def _light(color: str) -> bool:
+    r, g, b = (int(color[i:i + 2], 16) for i in (1, 3, 5))
+    return 0.299 * r + 0.587 * g + 0.114 * b > 225
+
+
+_ids = [0]
+PENCIL_AREA = 5200  # px²: larger than this, colour goes on as pencil, not as a flat wash
+
+
 def wash(d: str, color: str, op: float = 0.4, f: int = 0, extra: str = "") -> str:
-    return f'<path d="{d}" fill="{color}" fill-opacity="{op:.2f}" filter="url(#wc{f})" {extra}/>'
+    """Colour on paper. Small shapes get real watercolour; large areas get coloured pencil.
+
+    Restraint is the point: a big flat wash reads as fill, while pencil strokes over a
+    barely-there tint leave the paper breathing. Near-white shapes (snow, foam, clouds)
+    stay as paper reserved.
+    """
+    box = _bbox(d)
+    if _light(color) or box is None or (box[2] - box[0]) * (box[3] - box[1]) < PENCIL_AREA:
+        return f'<path d="{d}" fill="{color}" fill-opacity="{op:.2f}" filter="url(#wc{f})" {extra}/>'
+    _ids[0] += 1
+    cid = f"cp{_ids[0]}"
+    rng = random.Random(zlib.crc32(d.encode()))
+    x0, y0, x1, y1 = box
+    ang = 24 + rng.uniform(-7, 7)
+    k = min(1.0, op * 1.5)
+    strokes = hatch(rng, x0, y0, x1, y1, spacing=4.6 - 1.9 * k, angle=ang, lmin=8, lmax=26, gap=.4,
+                    ops=(.24 * k + .07, .4 * k + .09, .58 * k + .1), sw=.7, color=color, jitter=4)
+    return (f'<g {extra}><path d="{d}" fill="{color}" fill-opacity="{op * .28:.2f}" filter="url(#wc{f})"/>'
+            f'<clipPath id="{cid}"><path d="{d}"/></clipPath><g clip-path="url(#{cid})" mask="url(#patchy)">{strokes}</g></g>')
 
 
 def blob(rng, cx, cy, rx, ry, n=10, wob=0.22) -> str:

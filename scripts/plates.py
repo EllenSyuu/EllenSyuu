@@ -15,7 +15,7 @@ import re
 from pathlib import Path
 
 import art
-from sketch import font_css
+from sketch import PAPER, font_css
 from scenes import PH, PW, SCENES
 
 OUT = Path("assets/plates")
@@ -51,7 +51,7 @@ async def render_all() -> None:
         pg = await b.new_page(viewport={"width": PW, "height": PH}, device_scale_factor=2)
         for k in range(len(SCENES)):
             drawing, _ = split(k)
-            await pg.set_content(f'<html><body style="margin:0;background:#f6f1e6">{plate_svg(drawing)}</body></html>')
+            await pg.set_content(f'<html><body style="margin:0;background:{PAPER}">{plate_svg(drawing)}</body></html>')
             await pg.wait_for_timeout(400)
             png = await pg.screenshot(clip={"x": 0, "y": 0, "width": PW, "height": PH})
             im = Image.open(io.BytesIO(png)).convert("RGB")
