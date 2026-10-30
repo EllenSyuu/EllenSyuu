@@ -1,0 +1,40 @@
+<p align="center">
+  <a href="https://ellensyuu.github.io">
+    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. I model rare, high-impact events — floods, financial tail risk, gaps in education data — and build the software that makes those models trustworthy. Drawing: Mont-Tremblant in winter, seen across the river from a lit café.">
+  </a>
+</p>
+
+<p align="center">
+  <img src="assets/ledger.svg" width="100%" alt="The last five weeks as a hand-drawn calendar, with a tick for every day of work.">
+</p>
+
+<p align="center">
+  <img src="assets/heading-work.svg" width="100%" alt="Selected work">
+</p>
+
+<p align="center">
+  <a href="https://github.com/EllenSyuu/SAC-thesis-2026"><img src="assets/works/03-covarchimax.svg" width="49%" alt="covarchimax — M.Sc. thesis, McGill 2026. Does heavy rain hit several places at the same time, and is that changing? R package for covariate-dependent Archimax copulas."></a>
+  <a href="https://ellensyuu.github.io/#case-tailfm"><img src="assets/works/04-tailfm.svg" width="49%" alt="TailFM — can a neural network learn how heavy a tail is, and how often extremes arrive together? PyTorch, amortized inference."></a>
+</p>
+<p align="center">
+  <a href="https://ellensyuu.github.io/#case-vvi"><img src="assets/works/05-vvi.svg" width="49%" alt="VVI — hybrid immunity in calendar time. Does a booster before your first Omicron infection protect you, or imprint you?"></a>
+  <a href="https://github.com/EllenSyuu/SDG"><img src="assets/works/06-sdg.svg" width="49%" alt="SDG 4 Revision Tracker — how much do education statistics change from one data release to the next? Python, Polars."></a>
+</p>
+<p align="center">
+  <a href="https://github.com/EllenSyuu/BCM"><img src="assets/works/07-bcm.svg" width="49%" alt="Bayesian Cohort Model, SDG 4.1.4 — an independent reproduction of a published model for out-of-school rates. Work in progress."></a>
+  <a href="https://ellensyuu.github.io/IMMCA/"><img src="assets/works/08-immca.svg" width="49%" alt="IMMCA — Canadian immigration pathways: federal, Québec and provincial routes and what they ask, in three languages, refreshed daily."></a>
+</p>
+<p align="center">
+  <a href="https://hosi-cite.vercel.app"><img src="assets/works/09-hosicite.svg" width="49%" alt="HosiCite — a citation atlas: who cites whom, drawn as an old painted map with a timeline."></a>
+  <a href="https://ellensyuu.github.io"><img src="assets/works/10-site.svg" width="49%" alt="ellensyuu.github.io — the full portfolio, drawn in ink on warm paper."></a>
+</p>
+
+<p align="center">
+  <sub>
+    <a href="https://ellensyuu.github.io"><b>ellensyuu.github.io</b></a> &nbsp;·&nbsp;
+    <a href="https://www.linkedin.com/in/ellenziyizhou">LinkedIn</a> &nbsp;·&nbsp;
+    Montréal · English · Français · 中文 · 粵語 · 日本語
+  </sub>
+</p>
+
+<!-- Drawn by scripts/ (cover.py, works.py, ledger.py). The ledger is redrawn every morning by .github/workflows/ledger.yml. -->

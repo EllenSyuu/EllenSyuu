@@ -1,0 +1,42 @@
+name: Redraw the ledger
+
+on:
+  schedule:
+    - cron: "17 10 * * *"   # every morning, ~6 a.m. in Montréal
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scripts/**", ".github/workflows/ledger.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ledger
+  cancel-in-progress: false
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r scripts/requirements.txt
+      - name: Draw the last five weeks
+        env:
+          # LEDGER_TOKEN (optional, a fine-grained PAT with no extra scopes) lets private-repo
+          # days count when "Private contributions" is on in your profile; GITHUB_TOKEN sees public work.
+          GH_TOKEN: ${{ secrets.LEDGER_TOKEN || secrets.GITHUB_TOKEN }}
+        run: python scripts/ledger.py
+      - name: Commit if it changed
+        run: |
+          if git diff --quiet -- assets/ledger.svg; then echo "No change."; exit 0; fi
+          # Committed as the Actions bot on purpose: a daily commit under your own name
+          # would itself count as a contribution and tick every day.
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/ledger.svg
+          git commit -m "Redraw the ledger"
+          git push
