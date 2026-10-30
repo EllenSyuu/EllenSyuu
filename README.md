@@ -32,7 +32,7 @@
 </p>
 
 <p align="center">
-  <a href="https://ellensyuu.github.io/#case-vvi"><img src="assets/works/more-1.svg" width="100%" alt="Hybrid immunity in calendar time (VVI) — booster timing and Omicron infection, from my HKU final-year project."></a>
+  <a href="https://github.com/EllenSyuu/VVI"><img src="assets/works/more-1.svg" width="100%" alt="Hybrid immunity in calendar time (VVI) — booster timing and Omicron infection, from my HKU final-year project."></a>
   <a href="https://github.com/EllenSyuu/BCM"><img src="assets/works/more-2.svg" width="100%" alt="Bayesian Cohort Model, SDG 4.1.4 — an independent reproduction, work in progress."></a>
   <a href="https://hosi-cite.vercel.app"><img src="assets/works/more-3.svg" width="100%" alt="HosiCite — a citation atlas drawn as an old painted map."></a>
   <a href="https://ellensyuu.github.io"><img src="assets/works/more-4.svg" width="100%" alt="ellensyuu.github.io — the full portfolio."></a>

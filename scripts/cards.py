@@ -513,7 +513,7 @@ def heading(n: str, title: str, lede: str, dest: Path, w=1280, h=120) -> None:
 
 MORE = [
     ("2023 — 26", "Hybrid immunity in calendar time", "VVI · PYTHON PACKAGE · FROM MY HKU FINAL-YEAR PROJECT",
-     "Booster timing and Omicron infection; a million-person cohort fits in 13 s.", "read the case study"),
+     "Booster timing and Omicron infection; a million-person cohort fits in 13 s.", "open the repository"),
     ("2026 —", "Bayesian Cohort Model", "R / STAN · SDG 4.1.4 · WORK IN PROGRESS",
      "An independent reproduction of a published model of out-of-school rates.", "open the repository"),
     ("2026 —", "HosiCite", "A CITATION ATLAS · LIVE",
