@@ -1,0 +1,179 @@
+"""Atelier kit for the illustrated plates: graphite hatching, watercolour washes, sketchbook margins.
+
+The look aims at a fine-art sketchbook: a hard pencil for construction lines, a soft one for
+contours drawn twice, hatching in short broken strokes, and transparent washes that pool at
+their edges and granulate on the paper. Only SVG + CSS, so GitHub can show it as an image.
+"""
+from __future__ import annotations
+
+import math
+import random
+
+from sketch import f1, smooth
+
+INK = "#1f2a3d"
+GRAPHITE = "#4a5363"
+
+# Pigments, named as on a palette. Each plate picks its own few.
+PIG = {
+    "prussian": "#2d4a6e",
+    "indigo": "#2b3557",
+    "cerulean": "#5b8fb9",
+    "rose": "#d98e95",
+    "madder": "#b84a5a",
+    "vermilion": "#cf4b32",
+    "sienna": "#a5623a",
+    "sepia": "#6b5240",
+    "sakura": "#eaa7b8",
+    "sap": "#7f9a6a",
+    "viridian": "#3f8a7f",
+    "teal": "#4c8e95",
+    "coral": "#e79a80",
+    "lavender": "#a7a3c8",
+    "slate": "#7d8aa3",
+    "amber": "#e3a54b",
+    "sand": "#d8c3a2",
+    "snow": "#fbf9f4",
+}
+
+
+def defs() -> str:
+    """Filters shared by all plates: five watercolour variants, a bloom and a graphite tooth."""
+    wc = []
+    for k, (freq, scale, seed) in enumerate([(0.016, 26, 2), (0.022, 20, 7), (0.03, 16, 13), (0.012, 34, 21), (0.045, 10, 29)]):
+        wc.append(f"""
+<filter id="wc{k}" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+  <feTurbulence type="fractalNoise" baseFrequency="{freq}" numOctaves="4" seed="{seed}" result="t"/>
+  <feDisplacementMap in="SourceGraphic" in2="t" scale="{scale}" xChannelSelector="R" yChannelSelector="G" result="d"/>
+  <feGaussianBlur in="d" stdDeviation="1.1" result="b"/>
+  <feGaussianBlur in="d" stdDeviation="6" result="bb"/>
+  <feComposite in="b" in2="bb" operator="arithmetic" k1="0" k2="1.55" k3="-0.62" k4="0" result="edge"/>
+  <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="{seed + 3}" result="g"/>
+  <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.6 1.22" result="gm"/>
+  <feComposite in="edge" in2="gm" operator="in"/>
+</filter>""")
+    return "".join(wc) + """
+<filter id="bloom" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+<filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>
+<filter id="tooth" x="0" y="0" width="100%" height="100%">
+  <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="4" result="n"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.6" result="m"/>
+  <feComposite in="SourceGraphic" in2="m" operator="in"/>
+</filter>
+<filter id="rough" x="-3%" y="-3%" width="106%" height="106%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="9" result="n"/>
+  <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+</filter>
+<filter id="edgefade" x="-10%" y="-10%" width="120%" height="120%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="4" seed="17" result="t"/>
+  <feDisplacementMap in="SourceGraphic" in2="t" scale="70" xChannelSelector="R" yChannelSelector="G" result="d"/>
+  <feGaussianBlur in="d" stdDeviation="7"/>
+</filter>
+"""
+
+
+# ------------------------------------------------------------------ washes
+
+def wash(d: str, color: str, op: float = 0.4, f: int = 0, extra: str = "") -> str:
+    return f'<path d="{d}" fill="{color}" fill-opacity="{op:.2f}" filter="url(#wc{f})" {extra}/>'
+
+
+def blob(rng, cx, cy, rx, ry, n=10, wob=0.22) -> str:
+    pts = []
+    for i in range(n):
+        t = 2 * math.pi * i / n
+        r = 1 + rng.uniform(-wob, wob)
+        pts.append((cx + rx * r * math.cos(t), cy + ry * r * math.sin(t)))
+    return smooth(pts, closed=True)
+
+
+def poly(pts) -> str:
+    return "M" + " L".join(f"{f1(x)},{f1(y)}" for x, y in pts) + " Z"
+
+
+# ------------------------------------------------------------------ graphite
+
+def hatch(rng, x0, y0, x1, y1, spacing=4.0, angle=55.0, lmin=8, lmax=30, gap=0.35,
+          ops=(0.22, 0.42, 0.65), sw=0.55, color=GRAPHITE, jitter=4.0) -> str:
+    """Short broken strokes in one direction — how a soft pencil lays down a tone.
+
+    Strokes are bucketed into three opacities so a whole tone is only three <path>s.
+    """
+    a = math.radians(angle + rng.uniform(-1.5, 1.5))
+    dx, dy = math.cos(a), math.sin(a)
+    nx, ny = -dy, dx
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    R = math.hypot(x1 - x0, y1 - y0) / 2 + 6
+    buckets = [[], [], []]
+    k = -R
+    while k <= R:
+        t = -R + rng.uniform(0, lmin)
+        while t < R:
+            L = rng.uniform(lmin, lmax)
+            if rng.random() > gap:
+                aj = math.radians(rng.uniform(-jitter, jitter))
+                ex, ey = dx * math.cos(aj) - dy * math.sin(aj), dy * math.cos(aj) + dx * math.sin(aj)
+                sx, sy = cx + nx * (k + rng.uniform(-.6, .6)) + dx * t, cy + ny * (k + rng.uniform(-.6, .6)) + dy * t
+                buckets[rng.randrange(3)].append(f"M{sx:.0f} {sy:.0f}l{ex * L:.0f} {ey * L:.0f}")
+            t += L + rng.uniform(1, 5)
+        k += spacing * rng.uniform(.8, 1.2)
+    return "".join(
+        f'<path d="{" ".join(b)}" fill="none" stroke="{color}" stroke-width="{sw}" stroke-linecap="round" opacity="{ops[i]}"/>'
+        for i, b in enumerate(buckets) if b
+    )
+
+
+def tone(rng, clip_id, d, box, layers=((4.2, 52),), **kw) -> str:
+    """A hatched tone clipped to a shape; several layers make cross-hatching."""
+    out = [f'<clipPath id="{clip_id}"><path d="{d}"/></clipPath><g clip-path="url(#{clip_id})">']
+    for spacing, ang in layers:
+        out.append(hatch(rng, *box, spacing=spacing, angle=ang, **kw))
+    out.append("</g>")
+    return "".join(out)
+
+
+def contour(rng, pts, sw=1.3, color=INK, closed=False, ghost=True, op=0.9) -> str:
+    """A line drawn with a soft pencil: a firm pass and a lighter, slightly offset second pass."""
+    d = smooth(pts, closed=closed)
+    out = f'<path d="{d}" fill="none" stroke="{color}" stroke-width="{sw}" stroke-linecap="round" stroke-linejoin="round" opacity="{op}"/>'
+    if ghost:
+        off = [(x + rng.uniform(-1.4, 1.4), y + rng.uniform(-1.4, 1.4)) for x, y in pts]
+        out += f'<path d="{smooth(off, closed=closed)}" fill="none" stroke="{color}" stroke-width="{sw * .45:.2f}" stroke-linecap="round" opacity="{op * .45:.2f}"/>'
+    return out
+
+
+def stroke(d, sw=1.0, color=INK, op=0.9, extra="") -> str:
+    return f'<path d="{d}" fill="none" stroke="{color}" stroke-width="{sw}" stroke-linecap="round" stroke-linejoin="round" opacity="{op}" {extra}/>'
+
+
+def construction(lines, op=0.16) -> str:
+    """Hard-pencil guide lines that a finished drawing leaves visible."""
+    d = " ".join(f"M{f1(a)},{f1(b)} L{f1(c)},{f1(e)}" for a, b, c, e in lines)
+    return f'<path d="{d}" fill="none" stroke="{GRAPHITE}" stroke-width=".5" opacity="{op}"/>'
+
+
+def swatches(x, y, items, hand_cls="hand") -> str:
+    """Pigment notes in the margin: a dab of each colour and its name in pencil."""
+    rng = random.Random(int(x * 7 + y))
+    out = []
+    for i, (name, col) in enumerate(items):
+        cx = x + i * 92
+        out.append(wash(blob(rng, cx, y, 9, 6.5, n=8, wob=.25), col, .75, f=4))
+        out.append(f'<text x="{f1(cx + 14)}" y="{f1(y + 4)}" class="{hand_cls}" font-size="12" fill="{GRAPHITE}">{name}</text>')
+    return "".join(out)
+
+
+def ribbon(pts, w0, w1) -> str:
+    """A tapered brush stroke along pts, w0 wide at the start and w1 at the end."""
+    n = len(pts)
+    left, right = [], []
+    for i, (x, y) in enumerate(pts):
+        a = pts[max(i - 1, 0)]
+        b = pts[min(i + 1, n - 1)]
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        L = math.hypot(dx, dy) or 1
+        nx, ny = -dy / L, dx / L
+        w = (w0 + (w1 - w0) * i / max(n - 1, 1)) / 2
+        left.append((x + nx * w, y + ny * w))
+        right.append((x - nx * w, y - ny * w))
+    return smooth(left) + " L" + smooth(right[::-1])[1:] + " Z"
