@@ -24,7 +24,7 @@
   <a href="https://github.com/EllenSyuu/SDG"><img src="assets/works/06-sdg.svg" width="49%" alt="Planche I, SDG 4 Data Revision Tracker — how much do education statistics change from one data release to the next? Python, Polars, strict typing and tests."></a>
 </p>
 <p align="center">
-  <a href="https://ellensyuu.github.io/#case-tailfm"><img src="assets/works/04-tailfm.svg" width="49%" alt="Planche IV, TailFM — can a neural network learn how heavy a tail is, and how often extremes arrive together? PyTorch, amortized inference."></a>
+  <a href="https://github.com/EllenSyuu/tailfm-union-band"><img src="assets/works/04-tailfm.svg" width="49%" alt="Planche IV, TailFM — can a neural network learn how heavy a tail is, and how often extremes arrive together? PyTorch, amortized inference."></a>
   <a href="https://ellensyuu.github.io/IMMCA/"><img src="assets/works/08-immca.svg" width="49%" alt="Planche VI, IMMCA — Canadian immigration pathways: federal, Québec and provincial routes and what they ask, in three languages, refreshed daily."></a>
 </p>
 
@@ -34,9 +34,12 @@
 
 <p align="center">
   <a href="https://github.com/EllenSyuu/VVI"><img src="assets/works/more-1.svg" width="100%" alt="Hybrid immunity in calendar time (VVI) — booster timing and Omicron infection, from my HKU final-year project."></a>
-  <a href="https://github.com/EllenSyuu/BCM"><img src="assets/works/more-2.svg" width="100%" alt="Bayesian Cohort Model, SDG 4.1.4 — an independent reproduction, work in progress."></a>
-  <a href="https://hosi-cite.vercel.app"><img src="assets/works/more-3.svg" width="100%" alt="HosiCite — a citation atlas drawn as an old painted map."></a>
-  <a href="https://ellensyuu.github.io"><img src="assets/works/more-4.svg" width="100%" alt="ellensyuu.github.io — the full portfolio."></a>
+  <a href="https://github.com/EllenSyuu/BCM"><img src="assets/works/more-2.svg" width="100%" alt="Bayesian Cohort Model, SDG 4.1.4 — an independent reproduction in NumPyro/JAX with a Stan reference, work in progress."></a>
+  <a href="https://github.com/EllenSyuu/tailfm-union-band"><img src="assets/works/more-3.svg" width="100%" alt="Selection-valid inference for the tail index under second-order bias — preprint, 2026; code and stored outputs archived on Zenodo."></a>
+  <a href="https://ellensyuu.github.io/FM/"><img src="assets/works/more-4.svg" width="100%" alt="FM Notebook — a no-calculator study site for SOA Exam FM: 30 lessons, every problem on a timeline, 108 drill types with spaced review."></a>
+  <a href="https://ellensyuu.github.io/DERIVATIVES/"><img src="assets/works/more-5.svg" width="100%" alt="Derivatives Notebook — all 34 chapters of Hull, with 982 end-of-chapter problems graded automatically."></a>
+  <a href="https://hosi-cite.vercel.app"><img src="assets/works/more-6.svg" width="100%" alt="HosiCite — a citation atlas drawn as an old painted map."></a>
+  <a href="https://ellensyuu.github.io"><img src="assets/works/more-7.svg" width="100%" alt="ellensyuu.github.io — the full portfolio."></a>
 </p>
 
 <p align="center">
