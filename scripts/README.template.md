@@ -5,9 +5,9 @@
 </p>
 
 <p align="center">
-  <b>Ziyi (Ellen) Zhou</b> · Statistical ML &amp; Data Engineering · Montréal<br>
-  I develop statistically rigorous methods and turn them into tested, reproducible software —<br>
-  from multivariate extremes to large-scale education data.
+  <b>Ziyi (Ellen) Zhou</b> · Statistician · Data engineer · Montréal<br>
+  I model rare, high-impact events — floods, financial tail risk, gaps in education data —<br>
+  and build the software that makes those models trustworthy.
 </p>
 
 <p align="center">
@@ -40,7 +40,8 @@
   <a href="https://ellensyuu.github.io/DERIVATIVES/"><img src="assets/works/more-5.svg" width="100%" alt="Derivatives Notebook — all 34 chapters of Hull, with 982 end-of-chapter problems graded automatically."></a>
   <a href="https://hosi-cite.vercel.app"><img src="assets/works/more-6.svg" width="100%" alt="HosiCite — a citation atlas drawn as an old painted map."></a>
   <a href="https://github.com/EllenSyuu/JobVeyra"><img src="assets/works/more-7.svg" width="100%" alt="JobVeyra — an open-source job-search engine: discovery in the regions you choose, evidence-based scoring, honest applications, and submission only when you approve."></a>
-  <a href="https://ellensyuu.github.io"><img src="assets/works/more-8.svg" width="100%" alt="ellensyuu.github.io — the full portfolio."></a>
+  <a href="https://github.com/EllenSyuu/numpyro-checkpoint"><img src="assets/works/more-8.svg" width="100%" alt="NumPyro Checkpoint — resumable NUTS sampling for NumPyro: long MCMC runs survive a crash and resume with bit-identical draws."></a>
+  <a href="https://ellensyuu.github.io"><img src="assets/works/more-9.svg" width="100%" alt="ellensyuu.github.io — the full portfolio."></a>
 </p>
 
 <p align="center">
