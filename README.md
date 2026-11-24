@@ -41,7 +41,8 @@
   <a href="https://hosi-cite.vercel.app"><img src="assets/works/more-6.svg" width="100%" alt="HosiCite — a citation atlas drawn as an old painted map."></a>
   <a href="https://github.com/EllenSyuu/JobVeyra"><img src="assets/works/more-7.svg" width="100%" alt="JobVeyra — an open-source job-search engine: discovery in the regions you choose, evidence-based scoring, honest applications, and submission only when you approve."></a>
   <a href="https://github.com/EllenSyuu/numpyro-checkpoint"><img src="assets/works/more-8.svg" width="100%" alt="NumPyro Checkpoint — resumable NUTS sampling for NumPyro: long MCMC runs survive a crash and resume with bit-identical draws."></a>
-  <a href="https://ellensyuu.github.io"><img src="assets/works/more-9.svg" width="100%" alt="ellensyuu.github.io — the full portfolio."></a>
+  <a href="https://github.com/EllenSyuu/self-consistency-stopping"><img src="assets/works/more-9.svg" width="100%" alt="Self-Consistency Stopping — early-stopping rules for LLM majority voting, replayed on the same recorded samples; work in progress."></a>
+  <a href="https://ellensyuu.github.io"><img src="assets/works/more-10.svg" width="100%" alt="ellensyuu.github.io — the full portfolio."></a>
 </p>
 
 <p align="center">
