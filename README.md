@@ -1,48 +1,7 @@
 <p align="center">
   <a href="https://ellensyuu.github.io">
-    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. I model rare, high-impact events — floods, financial tail risk, gaps in education data — and build the software that makes those models trustworthy. Painting: Montréal from the river at dusk on the first frost — Mont Royal and its cross, the lit skyline and the Jacques-Cartier bridge.">
+    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. Drawing: Montréal from the river at dusk — Mont Royal and its cross, the towers of the centre, the Old Port and the Jacques-Cartier bridge.">
   </a>
-</p>
-
-<p align="center">
-  <b>Ziyi (Ellen) Zhou</b> · Statistician · Data engineer · Montréal<br>
-  I model rare, high-impact events — floods, financial tail risk, gaps in education data —<br>
-  and build the software that makes those models trustworthy.
-</p>
-
-<p align="center">
-  <img src="assets/ledger.svg" width="100%" alt="Recent work: the last five weeks as a hand-drawn calendar, with a tick for every day of work.">
-  <img src="assets/workbench.svg" width="100%" alt="Latest from the workbench: my most recently updated public repositories and their latest commits, redrawn each morning.">
-</p>
-
-<p align="center">
-  <img src="assets/heading-work.svg" width="100%" alt="02. Selected work">
-</p>
-
-<p align="center">
-  <a href="https://github.com/EllenSyuu/SAC-thesis-2026"><img src="assets/works/03-covarchimax.svg" width="49%" alt="Planche II, covarchimax — M.Sc. thesis, McGill 2026. Does heavy rain hit several places at the same time, and is that changing? An R package for covariate-dependent Archimax copulas."></a>
-  <a href="https://github.com/EllenSyuu/SDG"><img src="assets/works/06-sdg.svg" width="49%" alt="Planche I, SDG 4 Data Revision Tracker — how much do education statistics change from one data release to the next? Python, Polars, strict typing and tests."></a>
-</p>
-<p align="center">
-  <a href="https://github.com/EllenSyuu/tailfm-union-band"><img src="assets/works/04-tailfm.svg" width="49%" alt="Planche IV, TailFM — can a neural network learn how heavy a tail is, and how often extremes arrive together? PyTorch, amortized inference."></a>
-  <a href="https://ellensyuu.github.io/IMMCA/"><img src="assets/works/08-immca.svg" width="49%" alt="Planche VI, IMMCA — Canadian immigration pathways: federal, Québec and provincial routes and what they ask, in three languages, refreshed daily."></a>
-</p>
-
-<p align="center">
-  <img src="assets/heading-more.svg" width="100%" alt="03. More work">
-</p>
-
-<p align="center">
-  <a href="https://github.com/EllenSyuu/VVI"><img src="assets/works/more-1.svg" width="100%" alt="Hybrid immunity in calendar time (VVI) — booster timing and Omicron infection, from my HKU final-year project."></a>
-  <a href="https://github.com/EllenSyuu/BCM"><img src="assets/works/more-2.svg" width="100%" alt="Bayesian Cohort Model, SDG 4.1.4 — an independent reproduction in NumPyro/JAX with a Stan reference, work in progress."></a>
-  <a href="https://github.com/EllenSyuu/tailfm-union-band"><img src="assets/works/more-3.svg" width="100%" alt="Selection-valid inference for the tail index under second-order bias — preprint, 2026; code and stored outputs archived on Zenodo."></a>
-  <a href="https://ellensyuu.github.io/FM/"><img src="assets/works/more-4.svg" width="100%" alt="FM Notebook — a no-calculator study site for SOA Exam FM: 30 lessons, every problem on a timeline, 108 drill types with spaced review."></a>
-  <a href="https://ellensyuu.github.io/DERIVATIVES/"><img src="assets/works/more-5.svg" width="100%" alt="Derivatives Notebook — all 34 chapters of Hull, with 982 end-of-chapter problems graded automatically."></a>
-  <a href="https://hosi-cite.vercel.app"><img src="assets/works/more-6.svg" width="100%" alt="HosiCite — a citation atlas drawn as an old painted map."></a>
-  <a href="https://github.com/EllenSyuu/JobVeyra"><img src="assets/works/more-7.svg" width="100%" alt="JobVeyra — an open-source job-search engine: discovery in the regions you choose, evidence-based scoring, honest applications, and submission only when you approve."></a>
-  <a href="https://github.com/EllenSyuu/numpyro-checkpoint"><img src="assets/works/more-8.svg" width="100%" alt="NumPyro Checkpoint — resumable NUTS sampling for NumPyro: long MCMC runs survive a crash and resume with bit-identical draws."></a>
-  <a href="https://github.com/EllenSyuu/self-consistency-stopping"><img src="assets/works/more-9.svg" width="100%" alt="Self-Consistency Stopping — early-stopping rules for LLM majority voting, replayed on the same recorded samples; work in progress."></a>
-  <a href="https://ellensyuu.github.io"><img src="assets/works/more-10.svg" width="100%" alt="ellensyuu.github.io — the full portfolio."></a>
 </p>
 
 <p align="center">
@@ -52,8 +11,3 @@
     Montréal · English · Français · 中文 · 粵語 · 日本語
   </sub>
 </p>
-
-<!-- Generated from scripts/README.template.md by scripts/daily.py — edit the template, not this file.
-     Drawn by scripts/ (cover.py, cards.py, ledger.py, daily.py; shared kit in draft.py and sketch.py).
-     Every morning .github/workflows/ledger.yml redraws the ledger and the workbench, and repoints
-     each card at its repository once that repository is public. -->
