@@ -12,8 +12,8 @@ from pathlib import Path
 
 from sketch import FONTS, font_css
 
-W, H = 1440, 800
-DY = -100  # the scene is drawn for y in 280..900
+W, H = 1440, 850
+DY = -50  # the scene is drawn for y in 280..900
 
 CREAM, NAVY, VERMILION, GOLD = "#f6f0e4", "#14213a", "#c8431f", "#e0ad4a"
 
@@ -57,10 +57,10 @@ def build() -> str:
     x = lx
     for dt, dd, step in (("NOW", "UNESCO Institute for Statistics", 266), ("M.SC.", "Statistics, McGill", 174),
                          ("B.SC.", "Statistics, HKU", 0)):
-        o.append(f'<text class="cap" x="{x}" y="744" fill="{CREAM}" opacity=".72" font-size="10.5">{dt}</text>'
-                 f'<text class="s" x="{x}" y="770" fill="{CREAM}">{dd}</text>')
+        o.append(f'<text class="cap" x="{x}" y="794" fill="{CREAM}" opacity=".72" font-size="10.5">{dt}</text>'
+                 f'<text class="s" x="{x}" y="820" fill="{CREAM}">{dd}</text>')
         x += step
-    o.append(f'<text class="cap" x="{rx}" y="770" fill="{CREAM}" text-anchor="end">ELLENSYUU.GITHUB.IO</text>')
+    o.append(f'<text class="cap" x="{rx}" y="820" fill="{CREAM}" text-anchor="end">ELLENSYUU.GITHUB.IO</text>')
     o.append("</svg>")
     return "".join(o)
 
