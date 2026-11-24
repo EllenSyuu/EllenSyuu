@@ -528,6 +528,8 @@ MORE = [
      "A job-search engine: scored with evidence, submitted only when approved.", "open the repository"),
     ("2026", "NumPyro Checkpoint", "PYTHON · NUMPYRO · JAX · OPEN SOURCE",
      "Long MCMC runs survive a crash and resume with bit-identical draws.", "open the repository"),
+    ("2026 —", "Self-Consistency Stopping", "PYTHON · SEQUENTIAL TESTING · IN PROGRESS",
+     "Early-stopping rules for LLM majority voting, replayed on the same recorded samples.", "open the repository"),
     ("2026 —", "ellensyuu.github.io", "THIS SKETCHBOOK",
      "The interactive versions of these plates, plus experience and public-interest work.", "visit the site"),
 ]
