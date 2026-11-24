@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://ellensyuu.github.io">
-    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. I model rare, high-impact events — floods, financial tail risk, gaps in education data — and build the software that makes those models trustworthy. Drawing: Planche 0, the Yasaka pagoda in Kyōto as an exploded isometric, pulled apart along its free-hanging core post, with a plan, a bracket-set detail and dimensions.">
+    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. I model rare, high-impact events — floods, financial tail risk, gaps in education data — and build the software that makes those models trustworthy. Painting: Montréal from the river at dusk on the first frost — Mont Royal and its cross, the lit skyline and the Jacques-Cartier bridge.">
   </a>
 </p>
 
