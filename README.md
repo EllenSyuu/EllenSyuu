@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://ellensyuu.github.io">
-    <img src="assets/cover.svg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. Drawing: Montréal from the river at dusk — Mont Royal and its cross, the towers of the centre, the Old Port and the Jacques-Cartier bridge.">
+    <img src="assets/cover.jpg" width="100%" alt="Ziyi (Ellen) Zhou — statistician and data engineer in Montréal. Photograph: at a whiteboard of copula formulas.">
   </a>
 </p>
 
